@@ -1,6 +1,6 @@
 use std::io::{self, Write};
-use std::time::Duration;
 use std::path::{Path, PathBuf};
+use std::time::Duration;
 
 use crossterm::cursor::{Hide, Show};
 use crossterm::event::{self, Event, KeyCode, KeyEvent};
@@ -10,9 +10,7 @@ use crossterm::tty::IsTty;
 use crossterm::{execute, queue};
 
 use crate::atuin::AtuinSyncMode;
-use crate::config::{
-    picker_mode_name, read_configured_picker_mode,
-};
+use crate::config::{picker_mode_name, read_configured_picker_mode};
 use crate::error::{cli_error, CliResult};
 use crate::i18n::{I18n, Locale, MessageKey};
 use crate::model::PickerMode;
@@ -67,7 +65,12 @@ fn shell_profile_path(shell: &str) -> Option<PathBuf> {
                 Some(PathBuf::from(&home).join(".bashrc"))
             }
         }
-        "fish" => Some(PathBuf::from(&home).join(".config").join("fish").join("config.fish")),
+        "fish" => Some(
+            PathBuf::from(&home)
+                .join(".config")
+                .join("fish")
+                .join("config.fish"),
+        ),
         _ => None,
     }
 }
@@ -125,16 +128,24 @@ pub(crate) fn setup_command(args: &[String]) -> CliResult<i32> {
     };
 
     let profile_path = shell_profile_path(shell_name);
-    let already_configured = profile_path.as_ref().map(|p| profile_contains_situs(p, shell_name)).unwrap_or(false);
+    let already_configured = profile_path
+        .as_ref()
+        .map(|p| profile_contains_situs(p, shell_name))
+        .unwrap_or(false);
 
     // Existing settings
     let initial_picker_mode = read_configured_picker_mode()?.unwrap_or(PickerMode::Inline);
-    let initial_bindkey = crate::config::read_configured_bindkey()?.unwrap_or_else(|| "^G".to_string());
+    let initial_bindkey =
+        crate::config::read_configured_bindkey()?.unwrap_or_else(|| "^G".to_string());
     let initial_locale = Locale::from_env();
 
     let mut picker_mode = initial_picker_mode;
     let mut bindkey = initial_bindkey;
-    let mut shell_init = if already_configured { "Skip" } else { "Auto-add" };
+    let mut shell_init = if already_configured {
+        "Skip"
+    } else {
+        "Auto-add"
+    };
     let mut atuin_import = "Skip";
     let mut current_locale = initial_locale;
     let mut active_row = ActiveSettingRow::PickerMode;
@@ -365,9 +376,16 @@ fn save_settings(
         if let Some(ref path) = profile_path {
             if !profile_contains_situs(path, shell_name) {
                 append_to_profile(path, shell_name).map_err(|e| {
-                    cli_error(format!("Failed to write to profile ({}): {}", path.display(), e))
+                    cli_error(format!(
+                        "Failed to write to profile ({}): {}",
+                        path.display(),
+                        e
+                    ))
                 })?;
-                println!("Successfully added situs init command to {}.", path.display());
+                println!(
+                    "Successfully added situs init command to {}.",
+                    path.display()
+                );
             }
         }
     }
@@ -376,7 +394,10 @@ fn save_settings(
         if let Some(db_path) = crate::atuin::default_atuin_db_path() {
             if db_path.exists() {
                 let h_path = crate::history::history_path()?;
-                println!("Running one-time Atuin import from {}...", db_path.display());
+                println!(
+                    "Running one-time Atuin import from {}...",
+                    db_path.display()
+                );
                 match crate::atuin::import_atuin_db(&db_path, &h_path) {
                     Ok(summary) => {
                         println!(
@@ -459,7 +480,12 @@ fn draw_setup(
     let picker_y = start_y + 5;
     queue!(stdout, crossterm::cursor::MoveTo(content_start_x, picker_y))?;
     if active_row == ActiveSettingRow::PickerMode {
-        queue!(stdout, SetForegroundColor(Color::Yellow), Print("▶ "), ResetColor)?;
+        queue!(
+            stdout,
+            SetForegroundColor(Color::Yellow),
+            Print("▶ "),
+            ResetColor
+        )?;
     } else {
         queue!(stdout, Print("  "))?;
     }
@@ -490,7 +516,12 @@ fn draw_setup(
     let lang_y = start_y + 7;
     queue!(stdout, crossterm::cursor::MoveTo(content_start_x, lang_y))?;
     if active_row == ActiveSettingRow::Language {
-        queue!(stdout, SetForegroundColor(Color::Yellow), Print("▶ "), ResetColor)?;
+        queue!(
+            stdout,
+            SetForegroundColor(Color::Yellow),
+            Print("▶ "),
+            ResetColor
+        )?;
     } else {
         queue!(stdout, Print("  "))?;
     }
@@ -524,7 +555,12 @@ fn draw_setup(
     let key_y = start_y + 9;
     queue!(stdout, crossterm::cursor::MoveTo(content_start_x, key_y))?;
     if active_row == ActiveSettingRow::WidgetKey {
-        queue!(stdout, SetForegroundColor(Color::Yellow), Print("▶ "), ResetColor)?;
+        queue!(
+            stdout,
+            SetForegroundColor(Color::Yellow),
+            Print("▶ "),
+            ResetColor
+        )?;
     } else {
         queue!(stdout, Print("  "))?;
     }
@@ -537,13 +573,7 @@ fn draw_setup(
         if is_selected {
             queue!(stdout, SetForegroundColor(Color::Green))?;
         }
-        queue!(
-            stdout,
-            Print(prefix),
-            Print(*k),
-            ResetColor,
-            Print("  ")
-        )?;
+        queue!(stdout, Print(prefix), Print(*k), ResetColor, Print("  "))?;
     }
 
     // 4. Shell Init
@@ -551,7 +581,12 @@ fn draw_setup(
     let init_y = start_y + 11;
     queue!(stdout, crossterm::cursor::MoveTo(content_start_x, init_y))?;
     if active_row == ActiveSettingRow::ShellInit {
-        queue!(stdout, SetForegroundColor(Color::Yellow), Print("▶ "), ResetColor)?;
+        queue!(
+            stdout,
+            SetForegroundColor(Color::Yellow),
+            Print("▶ "),
+            ResetColor
+        )?;
     } else {
         queue!(stdout, Print("  "))?;
     }
@@ -564,13 +599,7 @@ fn draw_setup(
         if is_selected {
             queue!(stdout, SetForegroundColor(Color::Green))?;
         }
-        queue!(
-            stdout,
-            Print(prefix),
-            Print(*opt),
-            ResetColor,
-            Print("  ")
-        )?;
+        queue!(stdout, Print(prefix), Print(*opt), ResetColor, Print("  "))?;
     }
 
     // 5. Atuin Import (conditional)
@@ -579,7 +608,12 @@ fn draw_setup(
         let import_y = start_y + 13;
         queue!(stdout, crossterm::cursor::MoveTo(content_start_x, import_y))?;
         if active_row == ActiveSettingRow::AtuinImport {
-            queue!(stdout, SetForegroundColor(Color::Yellow), Print("▶ "), ResetColor)?;
+            queue!(
+                stdout,
+                SetForegroundColor(Color::Yellow),
+                Print("▶ "),
+                ResetColor
+            )?;
         } else {
             queue!(stdout, Print("  "))?;
         }
@@ -592,13 +626,7 @@ fn draw_setup(
             if is_selected {
                 queue!(stdout, SetForegroundColor(Color::Green))?;
             }
-            queue!(
-                stdout,
-                Print(prefix),
-                Print(*opt),
-                ResetColor,
-                Print("  ")
-            )?;
+            queue!(stdout, Print(prefix), Print(*opt), ResetColor, Print("  "))?;
         }
         15
     } else {
@@ -677,7 +705,10 @@ fn setup_cli_fallback() -> CliResult<i32> {
         // One-time import for CLI fallback
         if let Some(db_path) = crate::atuin::default_atuin_db_path() {
             let h_path = crate::history::history_path()?;
-            println!("Running one-time Atuin import from {}...", db_path.display());
+            println!(
+                "Running one-time Atuin import from {}...",
+                db_path.display()
+            );
             let summary = crate::atuin::import_atuin_db(&db_path, &h_path)?;
             println!(
                 "Import finished: scanned {}, imported {}, skipped {}.",
