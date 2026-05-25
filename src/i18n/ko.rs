@@ -112,6 +112,9 @@ pub(super) fn ko(key: MessageKey) -> &'static str {
         MessageKey::SetupTuiSaveBtn => "[ 설정 저장 ]",
         MessageKey::SetupTuiCancelBtn => "[ 취소 ]",
         MessageKey::SetupTuiSavedMessage => "설정이 성공적으로 저장되었습니다!",
+        MessageKey::SetupTuiWidgetKey => "단축키 바인딩",
+        MessageKey::SetupTuiShellInit => "쉘 설정파일에 자동 등록",
+        MessageKey::SetupTuiAtuinImport => "Atuin 히스토리 1회 가져오기",
     }
 }
 

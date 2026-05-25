@@ -222,6 +222,9 @@ message_keys! {
     SetupTuiSaveBtn,
     SetupTuiCancelBtn,
     SetupTuiSavedMessage,
+    SetupTuiWidgetKey,
+    SetupTuiShellInit,
+    SetupTuiAtuinImport,
 }
 
 #[derive(Debug, Clone, Copy)]

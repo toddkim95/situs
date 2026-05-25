@@ -9,10 +9,16 @@ use crate::model::PickerMode;
 const ATUIN_SYNC_KEY: &str = "atuin_sync";
 const PICKER_MODE_KEY: &str = "picker_mode";
 const LANGUAGE_KEY: &str = "language";
+const BINDKEY_KEY: &str = "bindkey";
 
 pub(crate) fn config_path() -> PathBuf {
     if let Ok(path) = env::var("SITUS_CONFIG") {
         return PathBuf::from(path);
+    }
+
+    #[cfg(test)]
+    {
+        return PathBuf::from("/nonexistent-situs-test-config-path-xyz");
     }
 
     if let Ok(path) = env::var("XDG_CONFIG_HOME") {
@@ -27,6 +33,16 @@ pub(crate) fn config_path() -> PathBuf {
                 .join("config")
         })
         .unwrap_or_else(|_| PathBuf::from("situs-config"))
+}
+
+pub(crate) fn read_configured_bindkey() -> CliResult<Option<String>> {
+    read_config_value(&config_path(), BINDKEY_KEY)
+}
+
+pub(crate) fn write_configured_bindkey(key: &str) -> CliResult<PathBuf> {
+    let path = config_path();
+    write_config_value(&path, BINDKEY_KEY, key)?;
+    Ok(path)
 }
 
 pub(crate) fn read_configured_atuin_sync_mode() -> CliResult<Option<AtuinSyncMode>> {

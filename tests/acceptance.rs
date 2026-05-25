@@ -454,7 +454,8 @@ fn setup_writes_inline_picker_mode_by_default() {
     assert!(output.status.success(), "stderr: {}", stderr(&output));
     let config = fs::read_to_string(&home.config).unwrap();
     assert!(config.contains("picker_mode=inline\n"));
-    assert!(!config.contains("atuin_sync=auto\n"));
+    assert!(config.contains("bindkey=^G\n"));
+    assert!(config.contains("atuin_sync=off\n"));
 }
 
 #[test]
@@ -466,7 +467,8 @@ fn setup_writes_fullscreen_picker_mode_without_atuin_prompt_when_atuin_is_absent
     assert!(output.status.success(), "stderr: {}", stderr(&output));
     let config = fs::read_to_string(&home.config).unwrap();
     assert!(config.contains("picker_mode=fullscreen\n"));
-    assert!(!config.contains("atuin_sync=auto\n"));
+    assert!(config.contains("bindkey=^G\n"));
+    assert!(config.contains("atuin_sync=off\n"));
 }
 
 #[test]

@@ -120,6 +120,9 @@ pub(super) fn es(key: MessageKey) -> &'static str {
         MessageKey::SetupTuiSaveBtn => "[ Guardar Configuración ]",
         MessageKey::SetupTuiCancelBtn => "[ Cancelar ]",
         MessageKey::SetupTuiSavedMessage => "¡Configuración guardada correctamente!",
+        MessageKey::SetupTuiWidgetKey => "Tecla de atajo del widget",
+        MessageKey::SetupTuiShellInit => "Agregar automáticamente al perfil",
+        MessageKey::SetupTuiAtuinImport => "Importación única de Atuin",
     }
 }
 

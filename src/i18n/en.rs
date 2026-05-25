@@ -114,6 +114,9 @@ pub(super) fn en(key: MessageKey) -> &'static str {
         MessageKey::SetupTuiSaveBtn => "[ Save Settings ]",
         MessageKey::SetupTuiCancelBtn => "[ Cancel ]",
         MessageKey::SetupTuiSavedMessage => "Settings successfully saved!",
+        MessageKey::SetupTuiWidgetKey => "Widget Shortcut Key",
+        MessageKey::SetupTuiShellInit => "Auto-add to Shell Profile",
+        MessageKey::SetupTuiAtuinImport => "One-time Atuin Import",
     }
 }
 

@@ -1,5 +1,6 @@
 use std::io::{self, Write};
 use std::time::Duration;
+use std::path::{Path, PathBuf};
 
 use crossterm::cursor::{Hide, Show};
 use crossterm::event::{self, Event, KeyCode, KeyEvent};
@@ -10,7 +11,7 @@ use crossterm::{execute, queue};
 
 use crate::atuin::AtuinSyncMode;
 use crate::config::{
-    picker_mode_name, read_configured_atuin_sync_mode, read_configured_picker_mode,
+    picker_mode_name, read_configured_picker_mode,
 };
 use crate::error::{cli_error, CliResult};
 use crate::i18n::{I18n, Locale, MessageKey};
@@ -23,18 +24,16 @@ const LOCALES: &[Locale] = &[
     Locale::Es,
     Locale::Ja,
 ];
-const SYNC_MODES: &[AtuinSyncMode] = &[
-    AtuinSyncMode::Off,
-    AtuinSyncMode::Auto,
-    AtuinSyncMode::Always,
-];
 const PICKER_MODES: &[PickerMode] = &[PickerMode::Inline, PickerMode::Fullscreen];
+const WIDGET_KEYS: &[&str] = &["^G", "^R", "^T", "None"];
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum ActiveSettingRow {
     PickerMode,
-    AtuinSync,
     Language,
+    WidgetKey,
+    ShellInit,
+    AtuinImport,
     Save,
     Cancel,
 }
@@ -56,6 +55,55 @@ impl Drop for RawModeGuard {
     }
 }
 
+fn shell_profile_path(shell: &str) -> Option<PathBuf> {
+    let home = std::env::var("HOME").ok()?;
+    match shell {
+        "zsh" => Some(PathBuf::from(&home).join(".zshrc")),
+        "bash" => {
+            let bash_profile = PathBuf::from(&home).join(".bash_profile");
+            if bash_profile.exists() {
+                Some(bash_profile)
+            } else {
+                Some(PathBuf::from(&home).join(".bashrc"))
+            }
+        }
+        "fish" => Some(PathBuf::from(&home).join(".config").join("fish").join("config.fish")),
+        _ => None,
+    }
+}
+
+fn profile_contains_situs(path: &Path, shell: &str) -> bool {
+    let needle = match shell {
+        "zsh" => "situs init zsh",
+        "bash" => "situs init bash",
+        "fish" => "situs init fish",
+        _ => "situs init",
+    };
+    std::fs::read_to_string(path)
+        .map(|contents| contents.contains(needle))
+        .unwrap_or(false)
+}
+
+fn append_to_profile(path: &Path, shell: &str) -> std::io::Result<()> {
+    if let Some(parent) = path.parent() {
+        std::fs::create_dir_all(parent)?;
+    }
+    let mut file = std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(path)?;
+    let line = match shell {
+        "zsh" => "\n# Situs integration\neval \"$(situs init zsh)\"\n",
+        "bash" => "\n# Situs integration\neval \"$(situs init bash)\"\n",
+        "fish" => "\n# Situs integration\nsitus init fish | source\n",
+        _ => "",
+    };
+    if !line.is_empty() {
+        file.write_all(line.as_bytes())?;
+    }
+    Ok(())
+}
+
 pub(crate) fn setup_command(args: &[String]) -> CliResult<i32> {
     if !args.is_empty() {
         return Err(cli_error("setup does not accept arguments yet"));
@@ -65,15 +113,34 @@ pub(crate) fn setup_command(args: &[String]) -> CliResult<i32> {
         return setup_cli_fallback();
     }
 
+    let shell_path = std::env::var("SHELL").unwrap_or_default();
+    let shell_name = if shell_path.contains("zsh") {
+        "zsh"
+    } else if shell_path.contains("bash") {
+        "bash"
+    } else if shell_path.contains("fish") {
+        "fish"
+    } else {
+        "zsh"
+    };
+
+    let profile_path = shell_profile_path(shell_name);
+    let already_configured = profile_path.as_ref().map(|p| profile_contains_situs(p, shell_name)).unwrap_or(false);
+
     // Existing settings
     let initial_picker_mode = read_configured_picker_mode()?.unwrap_or(PickerMode::Inline);
-    let initial_atuin_sync = read_configured_atuin_sync_mode()?.unwrap_or(AtuinSyncMode::Off);
+    let initial_bindkey = crate::config::read_configured_bindkey()?.unwrap_or_else(|| "^G".to_string());
     let initial_locale = Locale::from_env();
 
     let mut picker_mode = initial_picker_mode;
-    let mut atuin_sync = initial_atuin_sync;
+    let mut bindkey = initial_bindkey;
+    let mut shell_init = if already_configured { "Skip" } else { "Auto-add" };
+    let mut atuin_import = "Skip";
     let mut current_locale = initial_locale;
     let mut active_row = ActiveSettingRow::PickerMode;
+
+    let atuin_db_path = crate::atuin::default_atuin_db_path();
+    let atuin_db_found = atuin_db_path.as_ref().map(|p| p.exists()).unwrap_or(false);
 
     let _guard =
         RawModeGuard::new().map_err(|e| cli_error(format!("failed to start TUI raw mode: {e}")))?;
@@ -85,7 +152,10 @@ pub(crate) fn setup_command(args: &[String]) -> CliResult<i32> {
             &mut stdout,
             i18n,
             picker_mode,
-            atuin_sync,
+            &bindkey,
+            shell_init,
+            atuin_import,
+            atuin_db_found,
             current_locale,
             active_row,
         )?;
@@ -93,17 +163,23 @@ pub(crate) fn setup_command(args: &[String]) -> CliResult<i32> {
         if event::poll(Duration::from_millis(100))? {
             if let Event::Key(KeyEvent { code, .. }) = event::read()? {
                 match code {
-                    KeyCode::Up => active_row = prev_row(active_row),
-                    KeyCode::Down => active_row = next_row(active_row),
+                    KeyCode::Up => active_row = prev_row(active_row, atuin_db_found),
+                    KeyCode::Down => active_row = next_row(active_row, atuin_db_found),
                     KeyCode::Left => match active_row {
                         ActiveSettingRow::PickerMode => {
                             picker_mode = cycle_picker_mode(picker_mode, false);
                         }
-                        ActiveSettingRow::AtuinSync => {
-                            atuin_sync = cycle_atuin_sync(atuin_sync, false);
-                        }
                         ActiveSettingRow::Language => {
                             current_locale = cycle_language(current_locale, false);
+                        }
+                        ActiveSettingRow::WidgetKey => {
+                            bindkey = cycle_widget_key(&bindkey, false);
+                        }
+                        ActiveSettingRow::ShellInit => {
+                            shell_init = cycle_shell_init(shell_init);
+                        }
+                        ActiveSettingRow::AtuinImport => {
+                            atuin_import = cycle_atuin_import(atuin_import);
                         }
                         _ => {}
                     },
@@ -111,11 +187,17 @@ pub(crate) fn setup_command(args: &[String]) -> CliResult<i32> {
                         ActiveSettingRow::PickerMode => {
                             picker_mode = cycle_picker_mode(picker_mode, true);
                         }
-                        ActiveSettingRow::AtuinSync => {
-                            atuin_sync = cycle_atuin_sync(atuin_sync, true);
-                        }
                         ActiveSettingRow::Language => {
                             current_locale = cycle_language(current_locale, true);
+                        }
+                        ActiveSettingRow::WidgetKey => {
+                            bindkey = cycle_widget_key(&bindkey, true);
+                        }
+                        ActiveSettingRow::ShellInit => {
+                            shell_init = cycle_shell_init(shell_init);
+                        }
+                        ActiveSettingRow::AtuinImport => {
+                            atuin_import = cycle_atuin_import(atuin_import);
                         }
                         _ => {}
                     },
@@ -123,15 +205,30 @@ pub(crate) fn setup_command(args: &[String]) -> CliResult<i32> {
                         ActiveSettingRow::PickerMode => {
                             picker_mode = cycle_picker_mode(picker_mode, true);
                         }
-                        ActiveSettingRow::AtuinSync => {
-                            atuin_sync = cycle_atuin_sync(atuin_sync, true);
-                        }
                         ActiveSettingRow::Language => {
                             current_locale = cycle_language(current_locale, true);
                         }
+                        ActiveSettingRow::WidgetKey => {
+                            bindkey = cycle_widget_key(&bindkey, true);
+                        }
+                        ActiveSettingRow::ShellInit => {
+                            shell_init = cycle_shell_init(shell_init);
+                        }
+                        ActiveSettingRow::AtuinImport => {
+                            atuin_import = cycle_atuin_import(atuin_import);
+                        }
                         ActiveSettingRow::Save => {
                             drop(_guard);
-                            save_settings(picker_mode, atuin_sync, current_locale, i18n)?;
+                            save_settings(
+                                picker_mode,
+                                current_locale,
+                                &bindkey,
+                                shell_init,
+                                atuin_import,
+                                shell_name,
+                                profile_path,
+                                i18n,
+                            )?;
                             return Ok(0);
                         }
                         ActiveSettingRow::Cancel => {
@@ -140,7 +237,16 @@ pub(crate) fn setup_command(args: &[String]) -> CliResult<i32> {
                     },
                     KeyCode::Char('s') | KeyCode::Char('S') => {
                         drop(_guard);
-                        save_settings(picker_mode, atuin_sync, current_locale, i18n)?;
+                        save_settings(
+                            picker_mode,
+                            current_locale,
+                            &bindkey,
+                            shell_init,
+                            atuin_import,
+                            shell_name,
+                            profile_path,
+                            i18n,
+                        )?;
                         return Ok(0);
                     }
                     KeyCode::Esc | KeyCode::Char('q') | KeyCode::Char('Q') => {
@@ -153,22 +259,38 @@ pub(crate) fn setup_command(args: &[String]) -> CliResult<i32> {
     }
 }
 
-fn next_row(row: ActiveSettingRow) -> ActiveSettingRow {
+fn next_row(row: ActiveSettingRow, atuin_db_found: bool) -> ActiveSettingRow {
     match row {
-        ActiveSettingRow::PickerMode => ActiveSettingRow::AtuinSync,
-        ActiveSettingRow::AtuinSync => ActiveSettingRow::Language,
-        ActiveSettingRow::Language => ActiveSettingRow::Save,
+        ActiveSettingRow::PickerMode => ActiveSettingRow::Language,
+        ActiveSettingRow::Language => ActiveSettingRow::WidgetKey,
+        ActiveSettingRow::WidgetKey => ActiveSettingRow::ShellInit,
+        ActiveSettingRow::ShellInit => {
+            if atuin_db_found {
+                ActiveSettingRow::AtuinImport
+            } else {
+                ActiveSettingRow::Save
+            }
+        }
+        ActiveSettingRow::AtuinImport => ActiveSettingRow::Save,
         ActiveSettingRow::Save => ActiveSettingRow::Cancel,
         ActiveSettingRow::Cancel => ActiveSettingRow::PickerMode,
     }
 }
 
-fn prev_row(row: ActiveSettingRow) -> ActiveSettingRow {
+fn prev_row(row: ActiveSettingRow, atuin_db_found: bool) -> ActiveSettingRow {
     match row {
         ActiveSettingRow::PickerMode => ActiveSettingRow::Cancel,
-        ActiveSettingRow::AtuinSync => ActiveSettingRow::PickerMode,
-        ActiveSettingRow::Language => ActiveSettingRow::AtuinSync,
-        ActiveSettingRow::Save => ActiveSettingRow::Language,
+        ActiveSettingRow::Language => ActiveSettingRow::PickerMode,
+        ActiveSettingRow::WidgetKey => ActiveSettingRow::Language,
+        ActiveSettingRow::ShellInit => ActiveSettingRow::WidgetKey,
+        ActiveSettingRow::AtuinImport => ActiveSettingRow::ShellInit,
+        ActiveSettingRow::Save => {
+            if atuin_db_found {
+                ActiveSettingRow::AtuinImport
+            } else {
+                ActiveSettingRow::ShellInit
+            }
+        }
         ActiveSettingRow::Cancel => ActiveSettingRow::Save,
     }
 }
@@ -178,16 +300,6 @@ fn cycle_picker_mode(current: PickerMode, _forward: bool) -> PickerMode {
         PickerMode::Inline => PickerMode::Fullscreen,
         PickerMode::Fullscreen => PickerMode::Inline,
     }
-}
-
-fn cycle_atuin_sync(current: AtuinSyncMode, forward: bool) -> AtuinSyncMode {
-    let idx = SYNC_MODES.iter().position(|m| *m == current).unwrap_or(0);
-    let next_idx = if forward {
-        (idx + 1) % SYNC_MODES.len()
-    } else {
-        (idx + SYNC_MODES.len() - 1) % SYNC_MODES.len()
-    };
-    SYNC_MODES[next_idx]
 }
 
 fn cycle_language(current: Locale, forward: bool) -> Locale {
@@ -200,14 +312,44 @@ fn cycle_language(current: Locale, forward: bool) -> Locale {
     LOCALES[next_idx]
 }
 
+fn cycle_widget_key(current: &str, forward: bool) -> String {
+    let idx = WIDGET_KEYS.iter().position(|k| *k == current).unwrap_or(0);
+    let next_idx = if forward {
+        (idx + 1) % WIDGET_KEYS.len()
+    } else {
+        (idx + WIDGET_KEYS.len() - 1) % WIDGET_KEYS.len()
+    };
+    WIDGET_KEYS[next_idx].to_string()
+}
+
+fn cycle_shell_init(current: &str) -> &'static str {
+    if current == "Auto-add" {
+        "Skip"
+    } else {
+        "Auto-add"
+    }
+}
+
+fn cycle_atuin_import(current: &str) -> &'static str {
+    if current == "Run once" {
+        "Skip"
+    } else {
+        "Run once"
+    }
+}
+
 fn save_settings(
     picker_mode: PickerMode,
-    atuin_sync: AtuinSyncMode,
     language: Locale,
+    bindkey: &str,
+    shell_init: &str,
+    atuin_import: &str,
+    shell_name: &str,
+    profile_path: Option<PathBuf>,
     i18n: I18n,
 ) -> CliResult<()> {
     let _ = crate::config::write_configured_picker_mode(picker_mode)?;
-    let _ = crate::config::write_configured_atuin_sync_mode(atuin_sync)?;
+    let _ = crate::config::write_configured_bindkey(bindkey)?;
     let lang_str = match language {
         Locale::En => "en",
         Locale::Ko => "ko",
@@ -216,6 +358,38 @@ fn save_settings(
         Locale::Ja => "ja",
     };
     let _ = crate::config::write_configured_language(lang_str)?;
+    let _ = crate::config::write_configured_atuin_sync_mode(AtuinSyncMode::Off)?;
+
+    if shell_init == "Auto-add" {
+        if let Some(ref path) = profile_path {
+            if !profile_contains_situs(path, shell_name) {
+                append_to_profile(path, shell_name).map_err(|e| {
+                    cli_error(format!("Failed to write to profile ({}): {}", path.display(), e))
+                })?;
+                println!("Successfully added situs init command to {}.", path.display());
+            }
+        }
+    }
+
+    if atuin_import == "Run once" {
+        if let Some(db_path) = crate::atuin::default_atuin_db_path() {
+            if db_path.exists() {
+                let h_path = crate::history::history_path()?;
+                println!("Running one-time Atuin import from {}...", db_path.display());
+                match crate::atuin::import_atuin_db(&db_path, &h_path) {
+                    Ok(summary) => {
+                        println!(
+                            "Import finished: scanned {}, imported {}, skipped {}.",
+                            summary.scanned, summary.imported, summary.skipped_existing
+                        );
+                    }
+                    Err(e) => {
+                        println!("Atuin import failed: {}", e);
+                    }
+                }
+            }
+        }
+    }
 
     println!("{}", i18n.text(MessageKey::SetupTuiSavedMessage));
     Ok(())
@@ -225,7 +399,10 @@ fn draw_setup(
     stdout: &mut io::Stdout,
     i18n: I18n,
     picker_mode: PickerMode,
-    atuin_sync: AtuinSyncMode,
+    bindkey: &str,
+    shell_init: &str,
+    atuin_import: &str,
+    atuin_db_found: bool,
     language: Locale,
     active_row: ActiveSettingRow,
 ) -> io::Result<()> {
@@ -235,7 +412,7 @@ fn draw_setup(
     let title = i18n.text(MessageKey::SetupTuiTitle);
     let help = i18n.text(MessageKey::SetupTuiHelp);
 
-    let start_y = (height / 2).saturating_sub(6);
+    let start_y = (height / 2).saturating_sub(8);
     let center_x = |text: &str| -> u16 {
         let text_len = text.chars().count() as u16;
         (width / 2).saturating_sub(text_len / 2)
@@ -273,24 +450,19 @@ fn draw_setup(
     )?;
 
     let content_start_x = (width / 2).saturating_sub(25).max(4);
+    let option_align_x = content_start_x + 30;
 
     // 1. Picker Mode
     let picker_label = format!("{}: ", i18n.text(MessageKey::SetupTuiPickerMode));
     let picker_y = start_y + 5;
     queue!(stdout, crossterm::cursor::MoveTo(content_start_x, picker_y))?;
     if active_row == ActiveSettingRow::PickerMode {
-        queue!(
-            stdout,
-            SetForegroundColor(Color::Yellow),
-            Print("▶ "),
-            ResetColor
-        )?;
+        queue!(stdout, SetForegroundColor(Color::Yellow), Print("▶ "), ResetColor)?;
     } else {
         queue!(stdout, Print("  "))?;
     }
     queue!(stdout, Print(&picker_label))?;
 
-    let option_align_x = content_start_x + 22;
     queue!(stdout, crossterm::cursor::MoveTo(option_align_x, picker_y))?;
     for mode in PICKER_MODES {
         let is_selected = *mode == picker_mode;
@@ -311,54 +483,12 @@ fn draw_setup(
         )?;
     }
 
-    // 2. Atuin Auto-Sync
-    let sync_label = format!("{}: ", i18n.text(MessageKey::SetupTuiAtuinSync));
-    let sync_y = start_y + 7;
-    queue!(stdout, crossterm::cursor::MoveTo(content_start_x, sync_y))?;
-    if active_row == ActiveSettingRow::AtuinSync {
-        queue!(
-            stdout,
-            SetForegroundColor(Color::Yellow),
-            Print("▶ "),
-            ResetColor
-        )?;
-    } else {
-        queue!(stdout, Print("  "))?;
-    }
-    queue!(stdout, Print(&sync_label))?;
-
-    queue!(stdout, crossterm::cursor::MoveTo(option_align_x, sync_y))?;
-    for mode in SYNC_MODES {
-        let is_selected = *mode == atuin_sync;
-        let prefix = if is_selected { "● " } else { "○ " };
-        let sync_str = match mode {
-            AtuinSyncMode::Off => "Off      ",
-            AtuinSyncMode::Auto => "Auto     ",
-            AtuinSyncMode::Always => "Always   ",
-        };
-        if is_selected {
-            queue!(stdout, SetForegroundColor(Color::Green))?;
-        }
-        queue!(
-            stdout,
-            Print(prefix),
-            Print(sync_str),
-            ResetColor,
-            Print("  ")
-        )?;
-    }
-
-    // 3. Language
+    // 2. Language
     let lang_label = format!("{}: ", i18n.text(MessageKey::SetupTuiLanguage));
-    let lang_y = start_y + 9;
+    let lang_y = start_y + 7;
     queue!(stdout, crossterm::cursor::MoveTo(content_start_x, lang_y))?;
     if active_row == ActiveSettingRow::Language {
-        queue!(
-            stdout,
-            SetForegroundColor(Color::Yellow),
-            Print("▶ "),
-            ResetColor
-        )?;
+        queue!(stdout, SetForegroundColor(Color::Yellow), Print("▶ "), ResetColor)?;
     } else {
         queue!(stdout, Print("  "))?;
     }
@@ -387,9 +517,95 @@ fn draw_setup(
         )?;
     }
 
-    // 4. Save Button
+    // 3. Widget Key
+    let key_label = format!("{}: ", i18n.text(MessageKey::SetupTuiWidgetKey));
+    let key_y = start_y + 9;
+    queue!(stdout, crossterm::cursor::MoveTo(content_start_x, key_y))?;
+    if active_row == ActiveSettingRow::WidgetKey {
+        queue!(stdout, SetForegroundColor(Color::Yellow), Print("▶ "), ResetColor)?;
+    } else {
+        queue!(stdout, Print("  "))?;
+    }
+    queue!(stdout, Print(&key_label))?;
+
+    queue!(stdout, crossterm::cursor::MoveTo(option_align_x, key_y))?;
+    for k in WIDGET_KEYS {
+        let is_selected = *k == bindkey;
+        let prefix = if is_selected { "● " } else { "○ " };
+        if is_selected {
+            queue!(stdout, SetForegroundColor(Color::Green))?;
+        }
+        queue!(
+            stdout,
+            Print(prefix),
+            Print(*k),
+            ResetColor,
+            Print("  ")
+        )?;
+    }
+
+    // 4. Shell Init
+    let init_label = format!("{}: ", i18n.text(MessageKey::SetupTuiShellInit));
+    let init_y = start_y + 11;
+    queue!(stdout, crossterm::cursor::MoveTo(content_start_x, init_y))?;
+    if active_row == ActiveSettingRow::ShellInit {
+        queue!(stdout, SetForegroundColor(Color::Yellow), Print("▶ "), ResetColor)?;
+    } else {
+        queue!(stdout, Print("  "))?;
+    }
+    queue!(stdout, Print(&init_label))?;
+
+    queue!(stdout, crossterm::cursor::MoveTo(option_align_x, init_y))?;
+    for opt in &["Auto-add", "Skip"] {
+        let is_selected = *opt == shell_init;
+        let prefix = if is_selected { "● " } else { "○ " };
+        if is_selected {
+            queue!(stdout, SetForegroundColor(Color::Green))?;
+        }
+        queue!(
+            stdout,
+            Print(prefix),
+            Print(*opt),
+            ResetColor,
+            Print("  ")
+        )?;
+    }
+
+    // 5. Atuin Import (conditional)
+    let next_y_offset = if atuin_db_found {
+        let import_label = format!("{}: ", i18n.text(MessageKey::SetupTuiAtuinImport));
+        let import_y = start_y + 13;
+        queue!(stdout, crossterm::cursor::MoveTo(content_start_x, import_y))?;
+        if active_row == ActiveSettingRow::AtuinImport {
+            queue!(stdout, SetForegroundColor(Color::Yellow), Print("▶ "), ResetColor)?;
+        } else {
+            queue!(stdout, Print("  "))?;
+        }
+        queue!(stdout, Print(&import_label))?;
+
+        queue!(stdout, crossterm::cursor::MoveTo(option_align_x, import_y))?;
+        for opt in &["Run once", "Skip"] {
+            let is_selected = *opt == atuin_import;
+            let prefix = if is_selected { "● " } else { "○ " };
+            if is_selected {
+                queue!(stdout, SetForegroundColor(Color::Green))?;
+            }
+            queue!(
+                stdout,
+                Print(prefix),
+                Print(*opt),
+                ResetColor,
+                Print("  ")
+            )?;
+        }
+        15
+    } else {
+        13
+    };
+
+    // 6. Save Button
     let save_btn = i18n.text(MessageKey::SetupTuiSaveBtn);
-    let save_y = start_y + 12;
+    let save_y = start_y + next_y_offset;
     queue!(
         stdout,
         crossterm::cursor::MoveTo(
@@ -409,9 +625,9 @@ fn draw_setup(
     }
     queue!(stdout, Print(save_btn), ResetColor)?;
 
-    // 5. Cancel Button
+    // 7. Cancel Button
     let cancel_btn = i18n.text(MessageKey::SetupTuiCancelBtn);
-    let cancel_y = start_y + 13;
+    let cancel_y = start_y + next_y_offset + 1;
     queue!(
         stdout,
         crossterm::cursor::MoveTo(
@@ -446,18 +662,26 @@ fn setup_cli_fallback() -> CliResult<i32> {
         picker_path.display()
     );
 
+    // Save default bindkey and set sync mode to Off
+    let _ = crate::config::write_configured_bindkey("^G")?;
+    let _ = crate::config::write_configured_atuin_sync_mode(AtuinSyncMode::Off)?;
+
     if crate::atuin::default_atuin_db_path()
         .as_deref()
         .map(|path| path.exists())
         .unwrap_or(false)
         && prompt_yes_no_cli(i18n.text(MessageKey::SetupAtuinFound), true)?
     {
-        let path = crate::config::write_configured_atuin_sync_mode(AtuinSyncMode::Auto)?;
-        println!(
-            "{} `auto` in {}",
-            i18n.text(MessageKey::SetupAtuinSetPrefix),
-            path.display()
-        );
+        // One-time import for CLI fallback
+        if let Some(db_path) = crate::atuin::default_atuin_db_path() {
+            let h_path = crate::history::history_path()?;
+            println!("Running one-time Atuin import from {}...", db_path.display());
+            let summary = crate::atuin::import_atuin_db(&db_path, &h_path)?;
+            println!(
+                "Import finished: scanned {}, imported {}, skipped {}.",
+                summary.scanned, summary.imported, summary.skipped_existing
+            );
+        }
     }
 
     println!();

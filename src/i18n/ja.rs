@@ -118,6 +118,9 @@ pub(super) fn ja(key: MessageKey) -> &'static str {
         MessageKey::SetupTuiSaveBtn => "[ 設定を保存 ]",
         MessageKey::SetupTuiCancelBtn => "[ キャンセル ]",
         MessageKey::SetupTuiSavedMessage => "設定が正常に保存されました！",
+        MessageKey::SetupTuiWidgetKey => "ウィジェットショートカットキー",
+        MessageKey::SetupTuiShellInit => "シェルプロファイルへの自動追加",
+        MessageKey::SetupTuiAtuinImport => "Atuin履歴の1回限りのインポート",
     }
 }
 

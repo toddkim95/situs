@@ -110,6 +110,9 @@ pub(super) fn zh_hans(key: MessageKey) -> &'static str {
         MessageKey::SetupTuiSaveBtn => "[ 保存设置 ]",
         MessageKey::SetupTuiCancelBtn => "[ 取消 ]",
         MessageKey::SetupTuiSavedMessage => "设置保存成功！",
+        MessageKey::SetupTuiWidgetKey => "快捷键绑定",
+        MessageKey::SetupTuiShellInit => "自动添加到 Shell 配置",
+        MessageKey::SetupTuiAtuinImport => "单次导入 Atuin 历史",
     }
 }
 
