@@ -338,6 +338,7 @@ fn cycle_atuin_import(current: &str) -> &'static str {
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn save_settings(
     picker_mode: PickerMode,
     language: Locale,
@@ -395,6 +396,7 @@ fn save_settings(
     Ok(())
 }
 
+#[allow(clippy::too_many_arguments)]
 fn draw_setup(
     stdout: &mut io::Stdout,
     i18n: I18n,

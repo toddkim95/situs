@@ -100,6 +100,7 @@ fn normalize_locale(value: &str) -> String {
 macro_rules! message_keys {
     ($($key:ident),+ $(,)?) => {
         #[derive(Debug, Clone, Copy)]
+        #[allow(dead_code)]
         pub(crate) enum MessageKey {
             $($key),+
         }
