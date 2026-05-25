@@ -4,6 +4,8 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    assignees:
+      - "toddkim95"
     groups:
       rust-dependencies:
         patterns:
@@ -13,6 +15,8 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    assignees:
+      - "toddkim95"
     groups:
       github-actions:
         patterns:

@@ -6,6 +6,11 @@ What changed?
 
 What user problem or maintenance problem does this solve?
 
+## Target Branch
+
+- [ ] Normal changes target `develop`
+- [ ] Release promotion targets `main`
+
 ## Verification
 
 - [ ] `cargo fmt -- --check`
