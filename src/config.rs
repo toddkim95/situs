@@ -15,6 +15,11 @@ pub(crate) fn config_path() -> PathBuf {
         return PathBuf::from(path);
     }
 
+    #[cfg(test)]
+    {
+        return PathBuf::from("/nonexistent-situs-test-config-path-xyz");
+    }
+
     if let Ok(path) = env::var("XDG_CONFIG_HOME") {
         return PathBuf::from(path).join("situs-cli").join("config");
     }

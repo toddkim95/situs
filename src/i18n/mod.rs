@@ -25,10 +25,7 @@ impl Locale {
     const ENV_ORDER: &'static [&'static str] = &["SITUS_LANG", "LC_ALL", "LC_MESSAGES", "LANG"];
 
     pub(crate) fn from_env() -> Self {
-        for name in Self::ENV_ORDER {
-            let Ok(value) = env::var(name) else {
-                continue;
-            };
+        if let Ok(value) = env::var("SITUS_LANG") {
             if let Some(locale) = Self::parse(&value) {
                 return locale;
             }
@@ -37,6 +34,14 @@ impl Locale {
         if let Ok(Some(value)) = crate::config::read_configured_language() {
             if let Some(locale) = Self::parse(&value) {
                 return locale;
+            }
+        }
+
+        for name in &["LC_ALL", "LC_MESSAGES", "LANG"] {
+            if let Ok(value) = env::var(name) {
+                if let Some(locale) = Self::parse(&value) {
+                    return locale;
+                }
             }
         }
 
