@@ -32,7 +32,9 @@ pub(super) fn key_intent(key: KeyEvent) -> KeyIntent {
     if key.code == KeyCode::Enter && key.modifiers.contains(KeyModifiers::ALT) {
         return KeyIntent::PutOnly;
     }
-    if (key.code == KeyCode::Char('y') || key.code == KeyCode::Char('Y')) && key.modifiers.contains(KeyModifiers::ALT) {
+    if (key.code == KeyCode::Char('y') || key.code == KeyCode::Char('Y'))
+        && key.modifiers.contains(KeyModifiers::ALT)
+    {
         return KeyIntent::PutOnly;
     }
 
