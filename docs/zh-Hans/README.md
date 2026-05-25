@@ -1,7 +1,7 @@
 # situs-cli
 
-[![CI](https://github.com/geonwookim/situs-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/geonwookim/situs-cli/actions/workflows/ci.yml)
-[![Security](https://github.com/geonwookim/situs-cli/actions/workflows/security.yml/badge.svg)](https://github.com/geonwookim/situs-cli/actions/workflows/security.yml)
+[![CI](https://github.com/toddkim95/situs/actions/workflows/ci.yml/badge.svg)](https://github.com/toddkim95/situs/actions/workflows/ci.yml)
+[![Security](https://github.com/toddkim95/situs/actions/workflows/security.yml/badge.svg)](https://github.com/toddkim95/situs/actions/workflows/security.yml)
 
 [English](../../README.md) | [한국어](../ko/README.md) | [简体中文](README.md) | [Español](../es/README.md) | [日本語](../ja/README.md)
 
@@ -72,7 +72,7 @@ history searcher；zoxide 是优秀的 directory jumper。Situs 只专注一个�
 仓库公开后:
 
 ```sh
-cargo install --git https://github.com/geonwookim/situs-cli
+cargo install --git https://github.com/toddkim95/situs
 ```
 
 如果仓库最终使用不同 owner 或名称，请替换为最终 GitHub URL。
@@ -80,8 +80,8 @@ cargo install --git https://github.com/geonwookim/situs-cli
 ### 从 Local Checkout 安装
 
 ```sh
-git clone https://github.com/geonwookim/situs-cli
-cd situs-cli
+git clone https://github.com/toddkim95/situs
+cd situs
 cargo install --path .
 ```
 

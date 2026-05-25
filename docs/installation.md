@@ -18,7 +18,7 @@ For development and smoke tests:
 After this repository is public:
 
 ```sh
-cargo install --git https://github.com/geonwookim/situs-cli
+cargo install --git https://github.com/toddkim95/situs
 ```
 
 If the repository is published under a different owner or name, replace the URL
@@ -27,8 +27,8 @@ with the final GitHub URL.
 ## Install From Source
 
 ```sh
-git clone https://github.com/geonwookim/situs-cli
-cd situs-cli
+git clone https://github.com/toddkim95/situs
+cd situs
 cargo install --path .
 ```
 
@@ -84,7 +84,7 @@ cargo install --path . --force
 From GitHub:
 
 ```sh
-cargo install --git https://github.com/geonwookim/situs-cli --force
+cargo install --git https://github.com/toddkim95/situs --force
 ```
 
 ## Uninstall

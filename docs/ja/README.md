@@ -1,7 +1,7 @@
 # situs-cli
 
-[![CI](https://github.com/geonwookim/situs-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/geonwookim/situs-cli/actions/workflows/ci.yml)
-[![Security](https://github.com/geonwookim/situs-cli/actions/workflows/security.yml/badge.svg)](https://github.com/geonwookim/situs-cli/actions/workflows/security.yml)
+[![CI](https://github.com/toddkim95/situs/actions/workflows/ci.yml/badge.svg)](https://github.com/toddkim95/situs/actions/workflows/ci.yml)
+[![Security](https://github.com/toddkim95/situs/actions/workflows/security.yml/badge.svg)](https://github.com/toddkim95/situs/actions/workflows/security.yml)
 
 [English](../../README.md) | [한국어](../ko/README.md) | [简体中文](../zh-Hans/README.md) | [Español](../es/README.md) | [日本語](README.md)
 
@@ -68,7 +68,7 @@ Situs は完全なシェル履歴の代替品ではありません。Atuin、McF
 リポジトリが公開された後:
 
 ```sh
-cargo install --git https://github.com/geonwookim/situs-cli
+cargo install --git https://github.com/toddkim95/situs
 ```
 
 リポジトリが別のオーナー名またはリポジトリ名で公開された場合は、URL を最終的な GitHub URL に置き換えてください。
@@ -76,8 +76,8 @@ cargo install --git https://github.com/geonwookim/situs-cli
 ### ローカルのチェックアウトからのインストール
 
 ```sh
-git clone https://github.com/geonwookim/situs-cli
-cd situs-cli
+git clone https://github.com/toddkim95/situs
+cd situs
 cargo install --path .
 ```
 

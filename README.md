@@ -1,7 +1,7 @@
 # situs-cli
 
-[![CI](https://github.com/geonwookim/situs-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/geonwookim/situs-cli/actions/workflows/ci.yml)
-[![Security](https://github.com/geonwookim/situs-cli/actions/workflows/security.yml/badge.svg)](https://github.com/geonwookim/situs-cli/actions/workflows/security.yml)
+[![CI](https://github.com/toddkim95/situs/actions/workflows/ci.yml/badge.svg)](https://github.com/toddkim95/situs/actions/workflows/ci.yml)
+[![Security](https://github.com/toddkim95/situs/actions/workflows/security.yml/badge.svg)](https://github.com/toddkim95/situs/actions/workflows/security.yml)
 
 [English](README.md) | [한국어](docs/ko/README.md) | [简体中文](docs/zh-Hans/README.md) | [Español](docs/es/README.md) | [日本語](docs/ja/README.md)
 
@@ -70,7 +70,7 @@ focused on one narrow job: resolving "where did this command work before?"
 After this repository is public:
 
 ```sh
-cargo install --git https://github.com/geonwookim/situs-cli
+cargo install --git https://github.com/toddkim95/situs
 ```
 
 If the repository is published under a different owner or name, replace the URL
@@ -79,8 +79,8 @@ with the final GitHub URL.
 ### From A Local Checkout
 
 ```sh
-git clone https://github.com/geonwookim/situs-cli
-cd situs-cli
+git clone https://github.com/toddkim95/situs
+cd situs
 cargo install --path .
 ```
 

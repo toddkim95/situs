@@ -1,7 +1,7 @@
 # situs-cli
 
-[![CI](https://github.com/geonwookim/situs-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/geonwookim/situs-cli/actions/workflows/ci.yml)
-[![Security](https://github.com/geonwookim/situs-cli/actions/workflows/security.yml/badge.svg)](https://github.com/geonwookim/situs-cli/actions/workflows/security.yml)
+[![CI](https://github.com/toddkim95/situs/actions/workflows/ci.yml/badge.svg)](https://github.com/toddkim95/situs/actions/workflows/ci.yml)
+[![Security](https://github.com/toddkim95/situs/actions/workflows/security.yml/badge.svg)](https://github.com/toddkim95/situs/actions/workflows/security.yml)
 
 [English](../../README.md) | [한국어](../ko/README.md) | [简体中文](../zh-Hans/README.md) | [Español](README.md) | [日本語](../ja/README.md)
 
@@ -68,7 +68,7 @@ Situs no es un reemplazo completo del historial de la shell. Atuin, McFly, fzf y
 Una vez que este repositorio sea público:
 
 ```sh
-cargo install --git https://github.com/geonwookim/situs-cli
+cargo install --git https://github.com/toddkim95/situs
 ```
 
 Si el repositorio se publica bajo un propietario o nombre diferente, reemplace la URL con la URL final de GitHub.
@@ -76,8 +76,8 @@ Si el repositorio se publica bajo un propietario o nombre diferente, reemplace l
 ### Desde un Checkout Local
 
 ```sh
-git clone https://github.com/geonwookim/situs-cli
-cd situs-cli
+git clone https://github.com/toddkim95/situs
+cd situs
 cargo install --path .
 ```
 
