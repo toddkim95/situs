@@ -1,0 +1,36 @@
+name: Feature request
+description: Suggest an improvement.
+title: "feature: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What workflow should be better?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Describe the behavior with a compact example.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - picker UI
+        - zsh integration
+        - matching/ranking
+        - Atuin integration
+        - docs
+        - packaging
+        - other
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

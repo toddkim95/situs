@@ -1,0 +1,11 @@
+# seconds_ago	status	cwd	command	source
+90	0	/Users/me/work/situs-cli	cargo install --path . --force	local
+780	0	/Users/me/work/situs-cli	cargo test	local
+1800	0	/Users/me/work/situs-cli	cargo clippy --all-targets -- -D warnings	local
+3600	0	/Users/me/work/situs-cli	cargo build --release	local
+5400	0	/Users/me/work/data-processor	cargo build --workspace	atuin
+7200	0	/Users/me/work/rust-tools	cargo install cargo-watch	atuin
+14400	0	/Users/me/work/schema-service	cargo run --bin schema-worker	local
+22000	0	/Users/me/work/situs-cli	cargo fmt -- --check	local
+26000	101	/Users/me/playground/parser-lab	cargo build	local
+36000	0	/Users/me/work/situs-cli	cargo run -- choose --picker fullscreen	local

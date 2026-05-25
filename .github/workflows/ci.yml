@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Rust (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+
+    env:
+      CARGO_TERM_COLOR: always
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Linux system dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y expect zsh
+
+      - name: Install macOS system dependencies
+        if: runner.os == 'macOS'
+        run: |
+          command -v expect >/dev/null 2>&1 || brew install expect
+          command -v zsh >/dev/null 2>&1
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Format
+        run: cargo fmt -- --check
+
+      - name: Test
+        run: cargo test --locked
+
+      - name: Clippy
+        run: cargo clippy --locked --all-targets -- -D warnings
+
+      - name: Build
+        run: cargo build --locked
+
+      - name: Package dry run
+        if: runner.os == 'Linux'
+        run: cargo package --locked --no-verify
+
+      - name: Documentation i18n
+        run: scripts/verify-doc-i18n.sh
+
+      - name: Picker smoke tests
+        run: scripts/verify-picker-modes.sh

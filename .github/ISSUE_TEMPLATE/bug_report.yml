@@ -1,0 +1,51 @@
+name: Bug report
+description: Report something that is not working as expected.
+title: "bug: "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Describe the behavior you saw.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: Include the command you typed before pressing Magical's key binding.
+      placeholder: |
+        1. Type ...
+        2. Press Ctrl-G
+        3. Press ...
+    validations:
+      required: true
+  - type: input
+    id: shell
+    attributes:
+      label: Shell
+      placeholder: zsh 5.9
+  - type: input
+    id: terminal
+    attributes:
+      label: Terminal
+      placeholder: iTerm2, Ghostty, Terminal.app, WezTerm, etc.
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: macOS 15, Ubuntu 24.04, etc.
+  - type: textarea
+    id: doctor
+    attributes:
+      label: magical doctor
+      description: Paste `magical doctor` output. Redact private paths if needed.
+      render: text
