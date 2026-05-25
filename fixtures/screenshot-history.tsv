@@ -3,7 +3,7 @@
 780	0	/Users/me/work/situs-cli	cargo test	local
 1800	0	/Users/me/work/situs-cli	cargo clippy --all-targets -- -D warnings	local
 3600	0	/Users/me/work/situs-cli	cargo build --release	local
-5400	0	/Users/me/work/data-processor	cargo build --workspace	atuin
+5400	0	/Users/me/work/situs-cli	cargo build --workspace	atuin
 7200	0	/Users/me/work/rust-tools	cargo install cargo-watch	atuin
 14400	0	/Users/me/work/schema-service	cargo run --bin schema-worker	local
 22000	0	/Users/me/work/situs-cli	cargo fmt -- --check	local

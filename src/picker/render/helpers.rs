@@ -35,7 +35,7 @@ pub(super) fn terminal_usable_width(width: usize) -> usize {
     width.saturating_sub(1).max(1)
 }
 
-pub(super) fn truncate_start(value: &str, width: usize) -> String {
+pub(crate) fn truncate_start(value: &str, width: usize) -> String {
     if visible_width(value) <= width {
         return value.to_string();
     }
@@ -47,7 +47,7 @@ pub(super) fn truncate_start(value: &str, width: usize) -> String {
     format!("...{suffix}")
 }
 
-pub(super) fn truncate_end(value: &str, width: usize) -> String {
+pub(crate) fn truncate_end(value: &str, width: usize) -> String {
     if visible_width(value) <= width {
         return value.to_string();
     }

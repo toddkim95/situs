@@ -3,7 +3,7 @@ use std::time::Duration;
 mod candidate;
 mod footer;
 mod header;
-mod helpers;
+pub(super) mod helpers;
 mod inspect;
 
 use crate::history::now_seconds;
