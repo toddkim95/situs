@@ -29,6 +29,7 @@ use tui::choose_candidate_inline;
 pub(crate) enum SelectionAction {
     Run,
     CdOnly,
+    PutOnly,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

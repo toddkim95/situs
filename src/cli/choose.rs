@@ -65,6 +65,7 @@ pub(super) fn choose_command(args: &[String]) -> CliResult<i32> {
             match selection.action {
                 SelectionAction::Run => "run",
                 SelectionAction::CdOnly => "cd",
+                SelectionAction::PutOnly => "put",
             }
         );
         println!("{}", candidate.cwd);
@@ -79,6 +80,10 @@ pub(super) fn choose_command(args: &[String]) -> CliResult<i32> {
         }
         SelectionAction::CdOnly => {
             println!("{}", candidate.cwd);
+            Ok(0)
+        }
+        SelectionAction::PutOnly => {
+            println!("{}", candidate.command);
             Ok(0)
         }
     }

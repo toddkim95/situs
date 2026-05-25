@@ -25,6 +25,7 @@ pub(super) enum PickerAction {
     KeepGoing,
     Run,
     CdOnly,
+    PutOnly,
     CopySelected,
     DeleteSelected,
     Cancel,
@@ -90,6 +91,7 @@ pub(super) fn handle_picker_key(
         KeyIntent::Run => PickerAction::Run,
         KeyIntent::Cancel => PickerAction::Cancel,
         KeyIntent::CdOnly => PickerAction::CdOnly,
+        KeyIntent::PutOnly => PickerAction::PutOnly,
         KeyIntent::ToggleHelp => {
             toggle_help(state);
             PickerAction::KeepGoing
