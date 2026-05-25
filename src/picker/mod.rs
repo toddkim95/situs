@@ -1,4 +1,5 @@
 mod clipboard;
+mod fullscreen;
 mod input;
 mod keymap;
 mod keys;
@@ -8,7 +9,6 @@ mod render;
 mod session;
 mod style;
 mod tui;
-mod fullscreen;
 mod viewport;
 pub(crate) mod width;
 

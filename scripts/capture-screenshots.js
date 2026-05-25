@@ -145,7 +145,7 @@ function captureAnsi({ picker, keys, waitFor, history, rawPath, attempt }) {
   const script = `
 set timeout 5
 set stty_init "rows ${ROWS} columns ${COLS}"
-spawn env -u NO_COLOR ${quoteTcl(`SITUS_HISTORY=${history}`)} {SITUS_ATUIN_SYNC=off} ${quoteTcl(`SITUS_PICKER=${picker}`)} {SITUS_INLINE_ROWS=14} {TERM=xterm-256color} {COLORTERM=truecolor} sh -c {SITUS_TTY=$(tty); export SITUS_TTY; exec "$1" choose --picker "$2" --command cargo} situs-screenshot ${quoteTcl(BIN)} ${quoteTcl(picker)}
+spawn env -u NO_COLOR {SITUS_LANG=en} ${quoteTcl(`SITUS_HISTORY=${history}`)} {SITUS_ATUIN_SYNC=off} ${quoteTcl(`SITUS_PICKER=${picker}`)} {SITUS_INLINE_ROWS=14} {TERM=xterm-256color} {COLORTERM=truecolor} sh -c {SITUS_TTY=$(tty); export SITUS_TTY; exec "$1" choose --picker "$2" --command cargo} situs-screenshot ${quoteTcl(BIN)} ${quoteTcl(picker)}
 expect {{cargo install --path . --force} {} timeout {puts stderr "missing loaded picker"; exit 2}}
 ${sendKeys}
 ${waitForView}

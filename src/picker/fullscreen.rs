@@ -1,26 +1,25 @@
 use std::io;
-use std::path::PathBuf;
 
-use crate::model::Candidate;
+use super::input::PickerState;
+use super::path::{common_directory_prefix, masked_cwd};
+use super::render::helpers::{truncate_end, truncate_start};
+use super::session::PickerSession;
 use crate::context::CommandContext;
 use crate::i18n::{I18n, MessageKey};
-use super::input::PickerState;
-use super::session::PickerSession;
-use super::render::helpers::{truncate_end, truncate_start};
-use super::path::{common_directory_prefix, masked_cwd};
+use crate::model::Candidate;
 
 use ratatui::{
     backend::CrosstermBackend,
     layout::{Constraint, Direction, Layout},
     style::{Color, Modifier, Style},
     text::{Line, Span},
-    widgets::{Block, Borders, BorderType, List, ListItem, Paragraph, Wrap},
+    widgets::{Block, BorderType, Borders, List, ListItem, Paragraph, Wrap},
     Terminal,
 };
 
 pub(super) fn render_ratatui_fullscreen(
     session: &mut PickerSession,
-    candidates: &[Candidate],
+    _candidates: &[Candidate],
     visible: &[(usize, &Candidate)],
     state: &PickerState,
     _command_context: &CommandContext,
@@ -28,7 +27,7 @@ pub(super) fn render_ratatui_fullscreen(
     let backend = CrosstermBackend::new(&mut session.output);
     let mut terminal = Terminal::new(backend)?;
 
-    terminal.draw(|f| {
+    let _ = terminal.draw(|f| {
         let size = f.area();
 
         // 1. Root Vertical Layout: Main Content, Search Input, Footer
@@ -44,15 +43,12 @@ pub(super) fn render_ratatui_fullscreen(
         // 2. Horizontal Main Content Layout: Sidebar Results, Detail/Help Panel
         let main_chunks = Layout::default()
             .direction(Direction::Horizontal)
-            .constraints([
-                Constraint::Percentage(50),
-                Constraint::Percentage(50),
-            ])
+            .constraints([Constraint::Percentage(50), Constraint::Percentage(50)])
             .split(chunks[0]);
 
         // Left Sidebar: Candidates List
         let visible_cands: Vec<&Candidate> = visible.iter().map(|(_, c)| *c).collect();
-        let common_prefix = common_directory_prefix(visible_cands.iter().map(|c| *c));
+        let common_prefix = common_directory_prefix(visible_cands.iter().copied());
 
         let list_items: Vec<ListItem> = visible
             .iter()
@@ -63,13 +59,17 @@ pub(super) fn render_ratatui_fullscreen(
                 let cwd = masked_cwd(&cand.cwd, common_prefix.as_deref());
 
                 let cmd_style = if is_selected {
-                    Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD)
+                    Style::default()
+                        .fg(Color::Yellow)
+                        .add_modifier(Modifier::BOLD)
                 } else {
                     Style::default().fg(Color::White)
                 };
 
                 let cwd_style = if is_selected {
-                    Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD)
+                    Style::default()
+                        .fg(Color::Cyan)
+                        .add_modifier(Modifier::BOLD)
                 } else {
                     Style::default().fg(Color::DarkGray)
                 };
@@ -94,15 +94,20 @@ pub(super) fn render_ratatui_fullscreen(
         let list_title = if visible.is_empty() {
             " Command History (0 results) ".to_string()
         } else {
-            format!(" Command History ({} / {}) ", state.selected + 1, visible.len())
+            format!(
+                " Command History ({} / {}) ",
+                state.selected + 1,
+                visible.len()
+            )
         };
 
-        let list = List::new(list_items)
-            .block(Block::default()
+        let list = List::new(list_items).block(
+            Block::default()
                 .title(list_title)
                 .borders(Borders::ALL)
                 .border_type(BorderType::Rounded)
-                .border_style(Style::default().fg(Color::DarkGray)));
+                .border_style(Style::default().fg(Color::DarkGray)),
+        );
 
         f.render_widget(list, main_chunks[0]);
 
@@ -110,7 +115,12 @@ pub(super) fn render_ratatui_fullscreen(
         let right_panel_widget = if state.show_help {
             let i18n = I18n::from_env();
             let text = vec![
-                Line::from(Span::styled("Situs Shortcut Keymap", Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD))),
+                Line::from(Span::styled(
+                    "Situs Shortcut Keymap",
+                    Style::default()
+                        .fg(Color::Yellow)
+                        .add_modifier(Modifier::BOLD),
+                )),
                 Line::from(""),
                 Line::from(vec![
                     Span::styled("  Up / Down      ", Style::default().fg(Color::Cyan)),
@@ -141,7 +151,12 @@ pub(super) fn render_ratatui_fullscreen(
                     Span::raw(i18n.text(MessageKey::KeymapEsc)),
                 ]),
                 Line::from(""),
-                Line::from(Span::styled("Views & Filters", Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD))),
+                Line::from(Span::styled(
+                    "Views & Filters",
+                    Style::default()
+                        .fg(Color::Yellow)
+                        .add_modifier(Modifier::BOLD),
+                )),
                 Line::from(""),
                 Line::from(vec![
                     Span::styled("  Ctrl-/ / F1    ", Style::default().fg(Color::Cyan)),
@@ -164,7 +179,12 @@ pub(super) fn render_ratatui_fullscreen(
                     Span::raw(i18n.text(MessageKey::KeymapContext)),
                 ]),
                 Line::from(""),
-                Line::from(Span::styled("History Actions", Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD))),
+                Line::from(Span::styled(
+                    "History Actions",
+                    Style::default()
+                        .fg(Color::Yellow)
+                        .add_modifier(Modifier::BOLD),
+                )),
                 Line::from(""),
                 Line::from(vec![
                     Span::styled("  Ctrl-Y         ", Style::default().fg(Color::Cyan)),
@@ -175,17 +195,26 @@ pub(super) fn render_ratatui_fullscreen(
                     Span::raw(i18n.text(MessageKey::KeymapDelete)),
                 ]),
             ];
-            Paragraph::new(text)
-                .block(Block::default()
+            Paragraph::new(text).block(
+                Block::default()
                     .title(" Keyboard Help ")
                     .borders(Borders::ALL)
                     .border_type(BorderType::Rounded)
-                    .border_style(Style::default().fg(Color::Yellow)))
+                    .border_style(Style::default().fg(Color::Yellow)),
+            )
         } else if let Some((_, cand)) = visible.get(state.selected) {
             let status_span = if cand.status == 0 {
-                Span::styled("ok", Style::default().fg(Color::Green).add_modifier(Modifier::BOLD))
+                Span::styled(
+                    "ok",
+                    Style::default()
+                        .fg(Color::Green)
+                        .add_modifier(Modifier::BOLD),
+                )
             } else {
-                Span::styled(format!("exit {}", cand.status), Style::default().fg(Color::Red).add_modifier(Modifier::BOLD))
+                Span::styled(
+                    format!("exit {}", cand.status),
+                    Style::default().fg(Color::Red).add_modifier(Modifier::BOLD),
+                )
             };
 
             let source_span = match cand.source.as_str() {
@@ -197,50 +226,65 @@ pub(super) fn render_ratatui_fullscreen(
             let now = crate::history::now_seconds();
             let age_str = crate::history::human_age_at(now, cand.timestamp);
             let i18n = I18n::from_env();
+            let command_label = format!("{:<12}", i18n.text(MessageKey::PickerInspectCommand));
+            let cwd_label = format!("{:<12}", i18n.text(MessageKey::PickerInspectCwd));
+            let status_label = format!("{:<12}", i18n.text(MessageKey::PickerInspectStatus));
+            let source_label = format!("{:<12}", i18n.text(MessageKey::PickerInspectSource));
+            let runs_label = format!("{:<12}", i18n.text(MessageKey::PickerInspectRuns));
+            let when_label = format!("{:<12}", i18n.text(MessageKey::PickerInspectWhen));
 
             let text = vec![
                 Line::from(vec![
-                    Span::styled("Command:   ", Style::default().fg(Color::DarkGray)),
-                    Span::styled(&cand.command, Style::default().fg(Color::White).add_modifier(Modifier::BOLD)),
+                    Span::styled(command_label, Style::default().fg(Color::DarkGray)),
+                    Span::styled(
+                        &cand.command,
+                        Style::default()
+                            .fg(Color::White)
+                            .add_modifier(Modifier::BOLD),
+                    ),
                 ]),
                 Line::from(""),
                 Line::from(vec![
-                    Span::styled("Directory: ", Style::default().fg(Color::DarkGray)),
+                    Span::styled(cwd_label, Style::default().fg(Color::DarkGray)),
                     Span::styled(&cand.cwd, Style::default().fg(Color::Cyan)),
                 ]),
                 Line::from(""),
                 Line::from(vec![
-                    Span::styled("Status:    ", Style::default().fg(Color::DarkGray)),
+                    Span::styled(status_label, Style::default().fg(Color::DarkGray)),
                     status_span,
                 ]),
                 Line::from(vec![
-                    Span::styled("Source:    ", Style::default().fg(Color::DarkGray)),
+                    Span::styled(source_label, Style::default().fg(Color::DarkGray)),
                     source_span,
                 ]),
                 Line::from(vec![
-                    Span::styled("Runs:      ", Style::default().fg(Color::DarkGray)),
-                    Span::raw(format!("{} total, {} successful", cand.run_count, cand.success_count)),
+                    Span::styled(runs_label, Style::default().fg(Color::DarkGray)),
+                    Span::raw(format!(
+                        "{} total, {} successful",
+                        cand.run_count, cand.success_count
+                    )),
                 ]),
                 Line::from(vec![
-                    Span::styled("When:      ", Style::default().fg(Color::DarkGray)),
+                    Span::styled(when_label, Style::default().fg(Color::DarkGray)),
                     Span::raw(age_str),
                 ]),
             ];
 
-            Paragraph::new(text)
-                .wrap(Wrap { trim: true })
-                .block(Block::default()
+            Paragraph::new(text).wrap(Wrap { trim: true }).block(
+                Block::default()
                     .title(" Inspection Details ")
                     .borders(Borders::ALL)
                     .border_type(BorderType::Rounded)
-                    .border_style(Style::default().fg(Color::DarkGray)))
+                    .border_style(Style::default().fg(Color::DarkGray)),
+            )
         } else {
-            Paragraph::new(vec![Line::from("No candidate selected.")])
-                .block(Block::default()
+            Paragraph::new(vec![Line::from("No candidate selected.")]).block(
+                Block::default()
                     .title(" Inspection Details ")
                     .borders(Borders::ALL)
                     .border_type(BorderType::Rounded)
-                    .border_style(Style::default().fg(Color::DarkGray)))
+                    .border_style(Style::default().fg(Color::DarkGray)),
+            )
         };
 
         f.render_widget(right_panel_widget, main_chunks[1]);
@@ -256,36 +300,78 @@ pub(super) fn render_ratatui_fullscreen(
             Span::styled("▶ ", Style::default().fg(Color::Yellow)),
             Span::raw(&state.query),
         ]))
-        .block(Block::default()
-            .title(search_title)
-            .borders(Borders::ALL)
-            .border_type(BorderType::Rounded)
-            .border_style(Style::default().fg(Color::Cyan)));
+        .block(
+            Block::default()
+                .title(search_title)
+                .borders(Borders::ALL)
+                .border_type(BorderType::Rounded)
+                .border_style(Style::default().fg(Color::Cyan)),
+        );
 
         f.render_widget(search_block, chunks[1]);
 
         // Footer shortcut bar
         let footer_spans = vec![
-            Span::styled(" Enter", Style::default().bg(Color::Rgb(50, 50, 50)).fg(Color::Yellow)),
+            Span::styled(
+                " Enter",
+                Style::default()
+                    .bg(Color::Rgb(50, 50, 50))
+                    .fg(Color::Yellow),
+            ),
             Span::raw(" cd & run  "),
-            Span::styled(" Tab", Style::default().bg(Color::Rgb(50, 50, 50)).fg(Color::Yellow)),
+            Span::styled(
+                " Tab",
+                Style::default()
+                    .bg(Color::Rgb(50, 50, 50))
+                    .fg(Color::Yellow),
+            ),
             Span::raw(" cd  "),
-            Span::styled(" Alt-Enter", Style::default().bg(Color::Rgb(50, 50, 50)).fg(Color::Yellow)),
+            Span::styled(
+                " Alt-Enter",
+                Style::default()
+                    .bg(Color::Rgb(50, 50, 50))
+                    .fg(Color::Yellow),
+            ),
             Span::raw(" paste only  "),
-            Span::styled(" Ctrl-Y", Style::default().bg(Color::Rgb(50, 50, 50)).fg(Color::Yellow)),
+            Span::styled(
+                " Ctrl-Y",
+                Style::default()
+                    .bg(Color::Rgb(50, 50, 50))
+                    .fg(Color::Yellow),
+            ),
             Span::raw(" copy  "),
-            Span::styled(" Ctrl-D", Style::default().bg(Color::Rgb(50, 50, 50)).fg(Color::Yellow)),
+            Span::styled(
+                " Ctrl-D",
+                Style::default()
+                    .bg(Color::Rgb(50, 50, 50))
+                    .fg(Color::Yellow),
+            ),
             Span::raw(" delete  "),
-            Span::styled(" F2", Style::default().bg(Color::Rgb(50, 50, 50)).fg(Color::Yellow)),
+            Span::styled(
+                " F2",
+                Style::default()
+                    .bg(Color::Rgb(50, 50, 50))
+                    .fg(Color::Yellow),
+            ),
             Span::raw(" source  "),
-            Span::styled(" F3", Style::default().bg(Color::Rgb(50, 50, 50)).fg(Color::Yellow)),
+            Span::styled(
+                " F3",
+                Style::default()
+                    .bg(Color::Rgb(50, 50, 50))
+                    .fg(Color::Yellow),
+            ),
             Span::raw(" context  "),
-            Span::styled(" Ctrl-/", Style::default().bg(Color::Rgb(50, 50, 50)).fg(Color::Yellow)),
+            Span::styled(
+                " Ctrl-/",
+                Style::default()
+                    .bg(Color::Rgb(50, 50, 50))
+                    .fg(Color::Yellow),
+            ),
             Span::raw(" help "),
         ];
 
-        let footer = Paragraph::new(Line::from(footer_spans))
-            .style(Style::default().fg(Color::DarkGray));
+        let footer =
+            Paragraph::new(Line::from(footer_spans)).style(Style::default().fg(Color::DarkGray));
 
         f.render_widget(footer, chunks[2]);
     });

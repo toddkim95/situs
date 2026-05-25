@@ -1,75 +1,82 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1147" height="388" viewBox="0 0 1147 388">
 <rect width="100%" height="100%" rx="12" fill="#111827"/>
 <rect x="8" y="8" width="1131" height="372" rx="8" fill="#282e3a" stroke="#334155"/>
-<rect x="16" y="14" width="9" height="20" fill="#161b27"/>
-<rect x="24.45" y="14" width="60" height="20" fill="#40d67a"/>
-<rect x="83.6" y="14" width="68" height="20" fill="#161b27"/>
-<rect x="151.2" y="14" width="77" height="20" fill="#445c91"/>
-<rect x="227.24999999999997" y="14" width="693" height="20" fill="#161b27"/>
-<rect x="920.15" y="14" width="110" height="20" fill="#303a4e"/>
-<rect x="1030" y="14" width="93" height="20" fill="#161b27"/>
-<text xml:space="preserve" x="24.45" y="28" fill="#0a0f18" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> Situs </text>
-<text xml:space="preserve" x="92.05" y="28" fill="#e2e8f0" opacity="0.68" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">v0.1.0</text>
-<text xml:space="preserve" x="151.2" y="28" fill="#ecf4ff" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> Inspect </text>
-<text xml:space="preserve" x="920.15" y="28" fill="#ecf4ff" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> 9/9 results </text>
-<text xml:space="preserve" x="1038.4499999999998" y="28" fill="#e2e8f0" opacity="0.68" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">successful</text>
-<text xml:space="preserve" x="32.9" y="188" fill="#e2e8f0" opacity="0.68" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">command</text>
-<text xml:space="preserve" x="92.05" y="188" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> cargo install --path . --force                                                                                            </text>
-<text xml:space="preserve" x="32.9" y="208" fill="#e2e8f0" opacity="0.68" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">cwd</text>
-<text xml:space="preserve" x="66.69999999999999" y="208" fill="#7aa2b5" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">/Users/me/work/situs-cli</text>
-<text xml:space="preserve" x="32.9" y="228" fill="#e2e8f0" opacity="0.68" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">status</text>
-<text xml:space="preserve" x="92.05" y="228" fill="#22c55e" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">ok</text>
-<text xml:space="preserve" x="32.9" y="248" fill="#e2e8f0" opacity="0.68" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">source</text>
-<text xml:space="preserve" x="92.05" y="248" fill="#e2e8f0" opacity="0.68" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">LOCAL</text>
-<text xml:space="preserve" x="32.9" y="268" fill="#e2e8f0" opacity="0.68" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">runs</text>
-<text xml:space="preserve" x="66.69999999999999" y="268" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> 1 total, 1 successful                                                                                                        </text>
-<text xml:space="preserve" x="32.9" y="288" fill="#e2e8f0" opacity="0.68" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">when</text>
-<text xml:space="preserve" x="66.69999999999999" y="288" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> 2m ago                                                                                                                       </text>
-<text xml:space="preserve" x="32.9" y="308" fill="#e2e8f0" opacity="0.68" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">enter</text>
-<text xml:space="preserve" x="75.14999999999999" y="308" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> run command in this directory                                                                                               </text>
-<text xml:space="preserve" x="32.9" y="328" fill="#e2e8f0" opacity="0.68" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">tab</text>
-<text xml:space="preserve" x="58.25" y="328" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> cd here and keep the query                                                                                                    </text>
-<rect x="16" y="334" width="9" height="20" fill="#131720"/>
-<rect x="24.45" y="334" width="68" height="20" fill="#6366f1"/>
-<rect x="92.05" y="334" width="1031" height="20" fill="#131720"/>
-<text xml:space="preserve" x="24.45" y="348" fill="#f8fafc" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> Search </text>
-<text xml:space="preserve" x="100.5" y="348" fill="#a3e635" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">&gt; </text>
-<text xml:space="preserve" x="117.39999999999999" y="348" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">cargo                                                                                                                   </text>
-<rect x="16" y="354" width="9" height="20" fill="#0c0f18"/>
-<rect x="24.45" y="354" width="43" height="20" fill="#374151"/>
-<rect x="66.69999999999999" y="354" width="60" height="20" fill="#0c0f18"/>
-<rect x="125.85" y="354" width="77" height="20" fill="#374151"/>
-<rect x="201.89999999999998" y="354" width="77" height="20" fill="#0c0f18"/>
-<rect x="277.95" y="354" width="102" height="20" fill="#374151"/>
-<rect x="379.34999999999997" y="354" width="60" height="20" fill="#0c0f18"/>
-<rect x="438.49999999999994" y="354" width="43" height="20" fill="#374151"/>
-<rect x="480.74999999999994" y="354" width="43" height="20" fill="#0c0f18"/>
-<rect x="523" y="354" width="60" height="20" fill="#374151"/>
-<rect x="582.15" y="354" width="51" height="20" fill="#0c0f18"/>
-<rect x="632.8499999999999" y="354" width="68" height="20" fill="#374151"/>
-<rect x="700.4499999999999" y="354" width="60" height="20" fill="#0c0f18"/>
-<rect x="759.5999999999999" y="354" width="68" height="20" fill="#374151"/>
-<rect x="827.1999999999999" y="354" width="77" height="20" fill="#0c0f18"/>
-<rect x="903.2499999999999" y="354" width="34" height="20" fill="#374151"/>
-<rect x="937.05" y="354" width="77" height="20" fill="#0c0f18"/>
-<rect x="1013.0999999999999" y="354" width="34" height="20" fill="#374151"/>
-<rect x="1046.8999999999999" y="354" width="77" height="20" fill="#0c0f18"/>
-<text xml:space="preserve" x="24.45" y="368" fill="#ecf4ff" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> esc </text>
-<text xml:space="preserve" x="66.69999999999999" y="368" fill="#94a3b8" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> quit  </text>
-<text xml:space="preserve" x="125.85" y="368" fill="#ecf4ff" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> up/down </text>
-<text xml:space="preserve" x="201.89999999999998" y="368" fill="#94a3b8" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> select  </text>
-<text xml:space="preserve" x="277.95" y="368" fill="#ecf4ff" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> left/right </text>
-<text xml:space="preserve" x="379.34999999999997" y="368" fill="#94a3b8" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> edit  </text>
-<text xml:space="preserve" x="438.49999999999994" y="368" fill="#ecf4ff" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> tab </text>
-<text xml:space="preserve" x="480.74999999999994" y="368" fill="#94a3b8" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> cd  </text>
-<text xml:space="preserve" x="523" y="368" fill="#ecf4ff" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> enter </text>
-<text xml:space="preserve" x="582.15" y="368" fill="#94a3b8" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> run  </text>
-<text xml:space="preserve" x="632.8499999999999" y="368" fill="#ecf4ff" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> ctrl-y </text>
-<text xml:space="preserve" x="700.4499999999999" y="368" fill="#94a3b8" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> copy  </text>
-<text xml:space="preserve" x="759.5999999999999" y="368" fill="#ecf4ff" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> ctrl-d </text>
-<text xml:space="preserve" x="827.1999999999999" y="368" fill="#94a3b8" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> delete  </text>
-<text xml:space="preserve" x="903.2499999999999" y="368" fill="#ecf4ff" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> f2 </text>
-<text xml:space="preserve" x="937.05" y="368" fill="#94a3b8" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> source  </text>
-<text xml:space="preserve" x="1013.0999999999999" y="368" fill="#ecf4ff" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> f3 </text>
-<text xml:space="preserve" x="1046.8999999999999" y="368" fill="#94a3b8" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> context </text>
+<text xml:space="preserve" x="16" y="28" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">╭ Command History (1 / 9) ───────────────────────────────────────╮╭ Inspection Details ────────────────────────────────────────────╮</text>
+<rect x="24.45" y="34" width="913" height="20" fill="#282c34"/>
+<rect x="1122.9499999999998" y="34" width="9" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="48" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">│▶ </text>
+<text xml:space="preserve" x="41.349999999999994" y="48" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="700">cargo install --path . --force</text>
+<text xml:space="preserve" x="311.75" y="48" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="700">*/situs-cli</text>
+<text xml:space="preserve" x="404.7" y="48" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">                   ││command     </text>
+<text xml:space="preserve" x="683.55" y="48" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="700">cargo install --path . --force</text>
+<text xml:space="preserve" x="937.05" y="48" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">                      │</text>
+<rect x="16" y="54" width="110" height="20" fill="#282c34"/>
+<rect x="142.75" y="54" width="93" height="20" fill="#282c34"/>
+<rect x="565.25" y="54" width="17" height="20" fill="#282c34"/>
+<rect x="1122.9499999999998" y="54" width="9" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="68" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">│  cargo test  */situs-cli                                       ││                                                                │</text>
+<rect x="16" y="74" width="279" height="20" fill="#282c34"/>
+<rect x="311.75" y="74" width="93" height="20" fill="#282c34"/>
+<rect x="565.25" y="74" width="322" height="20" fill="#282c34"/>
+<rect x="1122.9499999999998" y="74" width="9" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="88" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">│  cargo clippy --all-targets ...  */situs-cli                   ││cwd         /Users/me/work/situs-cli                            │</text>
+<rect x="16" y="94" width="203" height="20" fill="#282c34"/>
+<rect x="235.7" y="94" width="93" height="20" fill="#282c34"/>
+<rect x="565.25" y="94" width="17" height="20" fill="#282c34"/>
+<rect x="1122.9499999999998" y="94" width="9" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="108" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">│  cargo build --release  */situs-cli                            ││                                                                │</text>
+<rect x="16" y="114" width="220" height="20" fill="#282c34"/>
+<rect x="252.59999999999997" y="114" width="93" height="20" fill="#282c34"/>
+<rect x="565.25" y="114" width="136" height="20" fill="#282c34"/>
+<rect x="1122.9499999999998" y="114" width="9" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="128" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">│  cargo build --workspace  */situs-cli                          ││status      </text>
+<text xml:space="preserve" x="683.55" y="128" fill="#e2e8f0" opacity="0.68" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="700">ok</text>
+<text xml:space="preserve" x="700.4499999999999" y="128" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">                                                  │</text>
+<rect x="16" y="134" width="237" height="20" fill="#282c34"/>
+<rect x="269.5" y="134" width="102" height="20" fill="#282c34"/>
+<rect x="565.25" y="134" width="161" height="20" fill="#282c34"/>
+<rect x="1122.9499999999998" y="134" width="9" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="148" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">│  cargo install cargo-watch  */rust-tools                       ││source      LOCAL                                               │</text>
+<rect x="16" y="154" width="271" height="20" fill="#282c34"/>
+<rect x="303.29999999999995" y="154" width="136" height="20" fill="#282c34"/>
+<rect x="565.25" y="154" width="127" height="20" fill="#282c34"/>
+<rect x="700.4499999999999" y="154" width="51" height="20" fill="#282c34"/>
+<rect x="759.5999999999999" y="154" width="9" height="20" fill="#282c34"/>
+<rect x="776.4999999999999" y="154" width="85" height="20" fill="#282c34"/>
+<rect x="1122.9499999999998" y="154" width="9" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="168" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">│  cargo run --bin schema-worker  */schema-service               ││runs        1 total, 1 successful                               │</text>
+<rect x="16" y="174" width="195" height="20" fill="#282c34"/>
+<rect x="227.24999999999997" y="174" width="93" height="20" fill="#282c34"/>
+<rect x="565.25" y="174" width="136" height="20" fill="#282c34"/>
+<rect x="708.9" y="174" width="26" height="20" fill="#282c34"/>
+<rect x="1122.9499999999998" y="174" width="9" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="188" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">│  cargo fmt -- --check  */situs-cli                             ││when        2m ago                                              │</text>
+<rect x="16" y="194" width="279" height="20" fill="#282c34"/>
+<rect x="311.75" y="194" width="93" height="20" fill="#282c34"/>
+<rect x="565.25" y="194" width="17" height="20" fill="#282c34"/>
+<rect x="1122.9499999999998" y="194" width="9" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="208" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">│  cargo run -- choose --picke...  */situs-cli                   ││                                                                │</text>
+<rect x="16" y="214" width="9" height="20" fill="#282c34"/>
+<rect x="565.25" y="214" width="17" height="20" fill="#282c34"/>
+<rect x="1122.9499999999998" y="214" width="9" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="228" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">│                                                                ││                                                                │</text>
+<rect x="16" y="234" width="9" height="20" fill="#282c34"/>
+<rect x="565.25" y="234" width="17" height="20" fill="#282c34"/>
+<rect x="1122.9499999999998" y="234" width="9" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="248" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">│                                                                ││                                                                │</text>
+<rect x="16" y="254" width="9" height="20" fill="#282c34"/>
+<rect x="565.25" y="254" width="17" height="20" fill="#282c34"/>
+<rect x="1122.9499999999998" y="254" width="9" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="268" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">│                                                                ││                                                                │</text>
+<rect x="16" y="274" width="1116" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="288" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">╰────────────────────────────────────────────────────────────────╯╰────────────────────────────────────────────────────────────────╯</text>
+<rect x="16" y="294" width="1116" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="308" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">╭ Search ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮</text>
+<rect x="16" y="314" width="68" height="20" fill="#282c34"/>
+<rect x="1122.9499999999998" y="314" width="9" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="328" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">│▶ cargo                                                                                                                           │</text>
+<rect x="16" y="334" width="1116" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="348" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</text>
+<rect x="16" y="354" width="1116" height="20" fill="#323232"/>
+<text xml:space="preserve" x="16" y="368" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> Enter cd &amp; run   Tab cd   Alt-Enter paste only   Ctrl-Y copy   Ctrl-D delete   F2 source   F3 context   Ctrl-/ help                </text>
 </svg>
