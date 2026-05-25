@@ -22,6 +22,7 @@ pub(crate) enum Locale {
 }
 
 impl Locale {
+    #[allow(dead_code)]
     const ENV_ORDER: &'static [&'static str] = &["SITUS_LANG", "LC_ALL", "LC_MESSAGES", "LANG"];
 
     pub(crate) fn from_env() -> Self {
