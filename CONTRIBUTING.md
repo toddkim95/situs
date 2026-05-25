@@ -3,6 +3,26 @@
 Thanks for helping make Situs better. This project is intentionally narrow:
 Situs is a command cwd resolver, not a general shell history replacement.
 
+## Branch Strategy
+
+Situs uses `develop` as the default development branch and `main` as the stable
+release branch.
+
+Typical flow:
+
+```text
+fork or feature branch -> pull request to develop -> release pull request to main
+```
+
+External contributors should open pull requests from a fork. Collaborators with
+write access should still create a branch and open a pull request rather than
+pushing directly to `develop` or `main`. Maintainers promote tested changes from
+`develop` to `main` when preparing a release.
+
+The protected branch rules for both `develop` and `main` should require pull
+requests, passing CI, resolved conversations, and block direct force pushes and
+deletions. `main` should be treated as release-only.
+
 ## Development Setup
 
 Install Rust stable, then run:

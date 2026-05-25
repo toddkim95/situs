@@ -9,7 +9,7 @@ on:
   push:
     branches:
       - main
-      - master
+      - develop
     paths:
       - Cargo.toml
       - Cargo.lock

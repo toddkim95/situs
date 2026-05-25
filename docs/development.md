@@ -33,6 +33,22 @@ The larger layers are directory modules:
 - `src/i18n/*.rs` stores one locale table per file, with `mod.rs` owning
   `Locale`, `I18n`, and `MessageKey`.
 
+## Branch Strategy
+
+The repository uses `develop` for day-to-day development and `main` for stable
+release history.
+
+- External contributors open pull requests from forks into `develop`.
+- Collaborators with write access create feature branches and open pull
+  requests into `develop`.
+- Maintainers promote `develop` to `main` with a release pull request.
+- Direct pushes, force pushes, and branch deletions should be blocked on both
+  `develop` and `main` through GitHub rulesets or branch protection.
+
+GitHub Actions must run for pull requests targeting protected branches and for
+pushes to both `develop` and `main`, so required status checks match the active
+branch strategy.
+
 ## Test Matrix
 
 Run the full verification matrix (formatting, clippy, unit/acceptance tests, doc translations, and PTY smoke tests) locally:

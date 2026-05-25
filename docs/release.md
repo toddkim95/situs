@@ -16,6 +16,7 @@ cargo audit
 
 Then:
 
+- open a release pull request from `develop` to `main`
 - update `CHANGELOG.md`
 - confirm GitHub Actions are green on Linux and macOS
 - confirm the Security workflow is green
@@ -43,6 +44,7 @@ cargo publish
 ## GitHub Release
 
 - create a signed tag if possible
+- tag from `main` after the release pull request has merged
 - paste the changelog section into the release notes
 - include known limitations
 - include upgrade instructions
