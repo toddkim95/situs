@@ -25,7 +25,11 @@ function main() {
 
   fs.mkdirSync(OUT_DIR, { recursive: true });
 
-  const tapes = ["inline-demo.tape", "fullscreen-demo.tape"];
+  const tapes = [
+    "inline-demo.tape",
+    "fullscreen-demo.tape",
+    "inline-tab.tape",
+  ];
   for (const tape of tapes) {
     const tapePath = path.join(VHS_DIR, tape);
     console.log(`3. Rendering ${tape}...`);
