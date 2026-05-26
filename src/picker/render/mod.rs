@@ -465,15 +465,16 @@ mod tests {
                 total_words: 2,
             },
             &state,
-            10,
+            12,
             140,
         );
 
         assert!(lines[0].contains("atuin"));
         assert!(lines[0].contains("workspace"));
         assert!(lines.iter().any(|line| line.contains("Keyboard")));
+        assert!(lines.iter().any(|line| line.contains("alt-enter")));
         assert!(lines.iter().any(|line| line.contains("ctrl-y")));
-        assert!(lines[9].contains("ctrl-/"));
+        assert!(lines.iter().any(|line| line.contains("ctrl-/")));
     }
 
     #[test]
