@@ -160,6 +160,7 @@ Picker 안에서:
 | `Left` / `Right` | query cursor 이동 |
 | `Tab` | 선택한 디렉터리로 `cd`하고 command를 shell buffer에 유지 |
 | `Enter` | 선택한 디렉터리로 `cd`하고 선택한 history command 실행 |
+| `Alt-Enter` / `Alt-Y` | 디렉터리를 바꾸거나 실행하지 않고 선택한 command를 shell buffer에 붙여넣기 |
 | `Ctrl-F` | 실패한 command history toggle |
 | `Ctrl-O` | 선택한 history item inspect |
 | `F2` | source filter 순환: all, local, Atuin |

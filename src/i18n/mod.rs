@@ -25,18 +25,42 @@ impl Locale {
     const ENV_ORDER: &'static [&'static str] = &["SITUS_LANG", "LC_ALL", "LC_MESSAGES", "LANG"];
 
     pub(crate) fn from_env() -> Self {
-        for name in Self::ENV_ORDER {
-            let Ok(value) = env::var(name) else {
-                continue;
-            };
-            if let Some(locale) = Self::parse(&value) {
-                return locale;
-            }
+        let situs_lang = env::var("SITUS_LANG").ok();
+        let configured = configured_language();
+        let locale_env = Self::ENV_ORDER[1..]
+            .iter()
+            .filter_map(|name| env::var(name).ok().map(|value| (*name, value)))
+            .collect::<Vec<_>>();
+
+        Self::from_sources(situs_lang.as_deref(), configured.as_deref(), locale_env)
+    }
+
+    pub(crate) fn from_sources<I, V>(
+        situs_lang: Option<&str>,
+        configured_language: Option<&str>,
+        locale_env: I,
+    ) -> Self
+    where
+        I: IntoIterator<Item = (&'static str, V)>,
+        V: AsRef<str>,
+    {
+        if let Some(locale) = situs_lang.and_then(Self::parse) {
+            return locale;
         }
 
-        if let Ok(Some(value)) = crate::config::read_configured_language() {
-            if let Some(locale) = Self::parse(&value) {
-                return locale;
+        if let Some(locale) = configured_language.and_then(Self::parse) {
+            return locale;
+        }
+
+        let values = locale_env
+            .into_iter()
+            .map(|(name, value)| (name, value.as_ref().to_string()))
+            .collect::<Vec<_>>();
+        for name in &Self::ENV_ORDER[1..] {
+            if let Some((_, value)) = values.iter().find(|(candidate, _)| candidate == name) {
+                if let Some(locale) = Self::parse(value) {
+                    return locale;
+                }
             }
         }
 
@@ -90,6 +114,16 @@ impl Locale {
     }
 }
 
+#[cfg(not(test))]
+fn configured_language() -> Option<String> {
+    crate::config::read_configured_language().ok().flatten()
+}
+
+#[cfg(test)]
+fn configured_language() -> Option<String> {
+    None
+}
+
 fn normalize_locale(value: &str) -> String {
     let value = value.trim();
     let value = value.split('.').next().unwrap_or(value);
@@ -125,6 +159,7 @@ message_keys! {
     KeymapHomeEnd,
     KeymapTab,
     KeymapEnter,
+    KeymapPut,
     KeymapEsc,
     KeymapHelp,
     KeymapFailed,
@@ -185,6 +220,7 @@ message_keys! {
     PickerHelpEditQuery,
     PickerHelpCdKeepQuery,
     PickerHelpRunSelected,
+    PickerHelpPasteCommand,
     PickerHelpCopyCommand,
     PickerHelpDeleteRow,
     PickerHelpCycleSource,
@@ -270,6 +306,7 @@ impl I18n {
   Home / End     {home_end}
   Tab            {tab}
   Enter          {enter}
+  Alt-Enter / Alt-Y {put}
   Esc / Ctrl-C   {esc}
 
 {views}
@@ -291,6 +328,7 @@ impl I18n {
             home_end = self.text(MessageKey::KeymapHomeEnd),
             tab = self.text(MessageKey::KeymapTab),
             enter = self.text(MessageKey::KeymapEnter),
+            put = self.text(MessageKey::KeymapPut),
             esc = self.text(MessageKey::KeymapEsc),
             views = self.text(MessageKey::KeymapViews),
             help = self.text(MessageKey::KeymapHelp),
@@ -370,6 +408,34 @@ mod tests {
         ]);
 
         assert_eq!(locale, Locale::En);
+    }
+
+    #[test]
+    fn configured_locale_wins_over_system_locale_but_not_situs_lang() {
+        assert_eq!(
+            Locale::from_sources(
+                Some("es"),
+                Some("ko"),
+                [("LC_ALL", "zh_Hans_CN.UTF-8"), ("LANG", "ja_JP.UTF-8")]
+            ),
+            Locale::Es
+        );
+        assert_eq!(
+            Locale::from_sources(
+                None,
+                Some("ko"),
+                [("LC_ALL", "zh_Hans_CN.UTF-8"), ("LANG", "ja_JP.UTF-8")]
+            ),
+            Locale::Ko
+        );
+    }
+
+    #[test]
+    fn unsupported_configured_locale_falls_through_to_system_locale() {
+        assert_eq!(
+            Locale::from_sources(None, Some("zh_TW.UTF-8"), [("LC_MESSAGES", "ja_JP.UTF-8")]),
+            Locale::Ja
+        );
     }
 
     #[test]

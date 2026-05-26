@@ -14,6 +14,7 @@ pub(super) fn es(key: MessageKey) -> &'static str {
         MessageKey::KeymapEnter => {
             "cd al directorio seleccionado y ejecutar el comando seleccionado"
         }
+        MessageKey::KeymapPut => "pegar el comando seleccionado sin cd ni ejecutar",
         MessageKey::KeymapEsc => "salir y mantener la entrada original de la shell",
         MessageKey::KeymapHelp => "mostrar/ocultar ayuda",
         MessageKey::KeymapFailed => "mostrar u ocultar historial fallido",
@@ -80,6 +81,7 @@ pub(super) fn es(key: MessageKey) -> &'static str {
         MessageKey::PickerHelpEditQuery => "editar la consulta inferior fija",
         MessageKey::PickerHelpCdKeepQuery => "cd al directorio seleccionado y mantener la consulta",
         MessageKey::PickerHelpRunSelected => "ejecutar el comando seleccionado en ese directorio",
+        MessageKey::PickerHelpPasteCommand => "pegar el comando seleccionado sin cd ni ejecutar",
         MessageKey::PickerHelpCopyCommand => "copiar comando seleccionado",
         MessageKey::PickerHelpDeleteRow => "eliminar fila de historial local seleccionada",
         MessageKey::PickerHelpCycleSource => "ciclar filtro de origen",

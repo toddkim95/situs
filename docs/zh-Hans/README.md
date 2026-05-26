@@ -157,6 +157,7 @@ cargo test
 | `Left` / `Right` | 移动 query cursor |
 | `Tab` | `cd` 到选中目录，并把 command 保留在 shell buffer |
 | `Enter` | `cd` 到选中目录，并运行选中的 history command |
+| `Alt-Enter` / `Alt-Y` | 不切换目录、不运行，仅把选中的 command 粘贴到 shell buffer |
 | `Ctrl-F` | 切换失败 command history |
 | `Ctrl-O` | Inspect 选中的 history item |
 | `F2` | 循环 source filter: all, local, Atuin |

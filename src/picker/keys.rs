@@ -24,8 +24,18 @@ fn read_escape_key(input: &mut File) -> io::Result<KeyEvent> {
     match next {
         b'[' => read_csi_key(input),
         b'O' => read_ss3_key(input),
-        _ => Ok(key(KeyCode::Esc)),
+        _ => read_alt_key(input, next),
     }
+}
+
+fn read_alt_key(input: &mut File, first: u8) -> io::Result<KeyEvent> {
+    let mut event = if first.is_ascii() {
+        decode_single_byte_key(first)
+    } else {
+        read_utf8_key(input, first)?
+    };
+    event.modifiers.insert(KeyModifiers::ALT);
+    Ok(event)
 }
 
 fn read_csi_key(input: &mut File) -> io::Result<KeyEvent> {
@@ -183,6 +193,9 @@ fn control_key(character: char) -> KeyEvent {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::fs::{self, OpenOptions};
+    use std::io::Write;
+    use std::path::PathBuf;
 
     #[test]
     fn decodes_arrow_escape_sequences() {
@@ -207,5 +220,39 @@ mod tests {
             KeyModifiers::CONTROL
         );
         assert_eq!(utf8_char_width(0xed), 3);
+    }
+
+    #[test]
+    fn decodes_escape_prefixed_alt_keys_from_terminal_bytes() {
+        let alt_y = read_key_from_bytes("alt-y", b"\x1by");
+        assert_eq!(alt_y.code, KeyCode::Char('y'));
+        assert!(alt_y.modifiers.contains(KeyModifiers::ALT));
+
+        let alt_enter = read_key_from_bytes("alt-enter", b"\x1b\r");
+        assert_eq!(alt_enter.code, KeyCode::Enter);
+        assert!(alt_enter.modifiers.contains(KeyModifiers::ALT));
+    }
+
+    fn read_key_from_bytes(label: &str, bytes: &[u8]) -> KeyEvent {
+        let path = temp_key_file(label);
+        {
+            let mut file = fs::File::create(&path).unwrap();
+            file.write_all(bytes).unwrap();
+        }
+        let mut input = OpenOptions::new().read(true).open(&path).unwrap();
+        let key = read_key_from_terminal(&mut input).unwrap();
+        let _ = fs::remove_file(path);
+        key
+    }
+
+    fn temp_key_file(label: &str) -> PathBuf {
+        std::env::temp_dir().join(format!(
+            "situs-key-test-{label}-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ))
     }
 }

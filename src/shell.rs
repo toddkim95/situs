@@ -100,6 +100,9 @@ _situs_bash_widget() {
         READLINE_LINE="cd -- $(printf %q "$selected_dir") && $selected_cmd"
         READLINE_POINT=${#READLINE_LINE}
       fi
+    elif [[ "$selected_action" == "put" ]]; then
+      READLINE_LINE="$selected_cmd"
+      READLINE_POINT=${#READLINE_LINE}
     fi
   fi
 }
@@ -141,6 +144,9 @@ function __situs_choose_widget
         commandline -r "$selected_cmd"
         commandline -f execute
       end
+    else if test "$selected_action" = "put"
+      commandline -r "$selected_cmd"
+      commandline -f repaint
     end
   end
 end
@@ -255,6 +261,14 @@ _situs_accept_from_history() {
           zle -M "situs: failed to cd to $selected_dir"
         fi
         ;;
+      put)
+        BUFFER="$selected_cmd"
+        CURSOR=${#BUFFER}
+        if (( $+functions[p10k] )); then
+          p10k display -r
+        fi
+        zle reset-prompt
+        ;;
       run)
         typeset -g _situs_override_command="$selected_cmd"
         typeset -g _situs_override_pwd="$selected_dir"
@@ -325,6 +339,20 @@ mod tests {
         assert!(cd_branch.contains("CURSOR=${#BUFFER}"));
         assert!(cd_branch.contains("zle reset-prompt"));
         assert!(!cd_branch.contains("zle accept-line"));
+    }
+
+    #[test]
+    fn zsh_widget_put_injects_command_without_cd() {
+        let put_branch = ZSH_INIT
+            .split("put)")
+            .nth(1)
+            .and_then(|rest| rest.split(";;").next())
+            .unwrap();
+
+        assert!(put_branch.contains("BUFFER=\"$selected_cmd\""));
+        assert!(put_branch.contains("CURSOR=${#BUFFER}"));
+        assert!(put_branch.contains("zle reset-prompt"));
+        assert!(!put_branch.contains("builtin cd"));
     }
 
     #[test]

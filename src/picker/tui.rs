@@ -167,6 +167,14 @@ pub(super) fn prompt_for_candidate_inline(
                     SelectionAction::CdOnly,
                 ));
             }
+            PickerAction::PutOnly => {
+                return Ok(selection_for_visible(
+                    &candidates,
+                    &visible,
+                    &state,
+                    SelectionAction::PutOnly,
+                ));
+            }
             PickerAction::CopySelected => {
                 if let Some(candidate) = selected_candidate(&candidates, &visible, &state) {
                     match copy_text_to_clipboard(&candidate.command) {

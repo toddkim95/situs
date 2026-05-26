@@ -82,6 +82,7 @@ pub(crate) fn resolve_picker_mode() -> CliResult<PickerMode> {
     )
 }
 
+#[cfg_attr(test, allow(dead_code))]
 pub(crate) fn read_configured_language() -> CliResult<Option<String>> {
     read_config_value(&config_path(), LANGUAGE_KEY)
 }

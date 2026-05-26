@@ -158,6 +158,7 @@ In the picker:
 | `Left` / `Right` | Move the query cursor |
 | `Tab` | `cd` to the selected directory and keep the command in the shell buffer |
 | `Enter` | `cd` to the selected directory and run the selected history command |
+| `Alt-Enter` / `Alt-Y` | Paste the selected command into the shell buffer without changing directory or running it |
 | `Ctrl-F` | Toggle failed command history |
 | `Ctrl-O` | Inspect the selected history item |
 | `F2` | Cycle source filter: all, local, Atuin |

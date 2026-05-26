@@ -116,6 +116,7 @@ fn keymap_prints_picker_shortcuts() {
     let stdout = stdout(&output);
     assert!(stdout.contains("Situs Keymap"));
     assert!(stdout.contains("Ctrl-/"));
+    assert!(stdout.contains("Alt-Enter / Alt-Y"));
     assert!(stdout.contains("Ctrl-Y"));
     assert!(stdout.contains("Ctrl-D"));
     assert!(stdout.contains("F2"));
@@ -639,4 +640,23 @@ fn doctor_uses_japanese_when_situs_lang_is_ja() {
     assert!(stdout.contains("Situs ドクター"));
     assert!(stdout.contains("履歴レコード"));
     assert!(stdout.contains("ピッカーモード"));
+}
+
+#[test]
+fn configured_language_overrides_system_locale() {
+    let home = TestHome::new("configured-lang-override");
+    fs::write(
+        &home.config,
+        "picker_mode=inline\natuin_sync=off\nlanguage=ko\n",
+    )
+    .unwrap();
+
+    // With LANG=C (set in command()), language=ko in config should override it!
+    let output = run(home.command().arg("doctor"));
+
+    assert!(output.status.success(), "stderr: {}", stderr(&output));
+    let stdout = stdout(&output);
+    assert!(stdout.contains("Situs 진단"));
+    assert!(stdout.contains("히스토리 레코드"));
+    assert!(stdout.contains("선택기 모드"));
 }

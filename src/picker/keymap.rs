@@ -23,11 +23,21 @@ pub(super) enum KeyIntent {
     ClearQuery,
     CopySelected,
     DeleteSelected,
+    PutOnly,
     InsertChar(char),
     Ignore,
 }
 
 pub(super) fn key_intent(key: KeyEvent) -> KeyIntent {
+    if key.code == KeyCode::Enter && key.modifiers.contains(KeyModifiers::ALT) {
+        return KeyIntent::PutOnly;
+    }
+    if (key.code == KeyCode::Char('y') || key.code == KeyCode::Char('Y'))
+        && key.modifiers.contains(KeyModifiers::ALT)
+    {
+        return KeyIntent::PutOnly;
+    }
+
     match key.code {
         KeyCode::Enter => KeyIntent::Run,
         KeyCode::Esc => KeyIntent::Cancel,
@@ -96,6 +106,14 @@ mod tests {
         assert!(matches!(
             key_intent(KeyEvent::new(KeyCode::Enter, KeyModifiers::NONE)),
             KeyIntent::Run
+        ));
+        assert!(matches!(
+            key_intent(KeyEvent::new(KeyCode::Enter, KeyModifiers::ALT)),
+            KeyIntent::PutOnly
+        ));
+        assert!(matches!(
+            key_intent(KeyEvent::new(KeyCode::Char('y'), KeyModifiers::ALT)),
+            KeyIntent::PutOnly
         ));
     }
 
