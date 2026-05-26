@@ -13,9 +13,15 @@ Type "export PATH=/Users/geonwookim/Desktop/projects/situs/worktrees/feature-vhs
 Enter
 Type "export SITUS_HISTORY=scripts/vhs/mock-history.tsv"
 Enter
+Type "export SITUS_CONFIG=/dev/null"
+Enter
+Type "export SITUS_ATUIN_SYNC=off"
+Enter
 Type "export SITUS_LANG=en"
 Enter
 Type "export SITUS_PICKER=fullscreen"
+Enter
+Type "export SITUS_TTY=$(tty)"
 Enter
 Type "eval '$(situs init zsh)'"
 Enter
