@@ -150,6 +150,7 @@ En el selector:
 | `Left` / `Right` | Mover el cursor de consulta |
 | `Tab` | `cd` al directorio seleccionado y mantener el comando en el buffer de la shell |
 | `Enter` | `cd` al directorio seleccionado y ejecutar el comando seleccionado del historial |
+| `Alt-Enter` / `Alt-Y` | Pegar el comando seleccionado en el buffer sin cambiar de directorio ni ejecutarlo |
 | `Ctrl-F` | Mostrar u ocultar el historial de comandos fallidos |
 | `Ctrl-O` | Inspeccionar el elemento del historial seleccionado |
 | `F2` | Ciclar el filtro de origen: all, local, Atuin |

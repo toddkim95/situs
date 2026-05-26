@@ -116,6 +116,7 @@ fn keymap_prints_picker_shortcuts() {
     let stdout = stdout(&output);
     assert!(stdout.contains("Situs Keymap"));
     assert!(stdout.contains("Ctrl-/"));
+    assert!(stdout.contains("Alt-Enter / Alt-Y"));
     assert!(stdout.contains("Ctrl-Y"));
     assert!(stdout.contains("Ctrl-D"));
     assert!(stdout.contains("F2"));

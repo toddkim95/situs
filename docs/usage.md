@@ -116,6 +116,7 @@ situs choose --mode restore --command "cargo build"
 | `Ctrl-A` / `Ctrl-E` | Jump to query start or end |
 | `Tab` | cd to selected directory and keep command in zsh |
 | `Enter` | cd to selected directory and run selected command |
+| `Alt-Enter` / `Alt-Y` | Paste selected command without cd or run |
 | `Ctrl-F` | Show or hide failed history |
 | `Ctrl-O` | Inspect selected history |
 | `Ctrl-/` or `F1` | Toggle help overlay |

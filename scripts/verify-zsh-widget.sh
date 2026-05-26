@@ -42,12 +42,15 @@ trap 'rm -rf "$TMP_ROOT"' EXIT
 
 TAB_MID_DIR="$TMP_ROOT/tab-mid"
 TAB_LATEST_DIR="$TMP_ROOT/tab-latest"
+PUT_DIR="$TMP_ROOT/put-only"
+PUT_START_DIR="$TMP_ROOT/put-start"
 ENTER_MID_DIR="$TMP_ROOT/enter-mid"
 ENTER_LATEST_DIR="$TMP_ROOT/enter-latest"
-mkdir -p "$TAB_MID_DIR" "$TAB_LATEST_DIR" "$ENTER_MID_DIR" "$ENTER_LATEST_DIR"
+mkdir -p "$TAB_MID_DIR" "$TAB_LATEST_DIR" "$PUT_DIR" "$PUT_START_DIR" "$ENTER_MID_DIR" "$ENTER_LATEST_DIR"
 
 TAB_MID_RAN="$TMP_ROOT/tab-mid-ran"
 TAB_LATEST_RAN="$TMP_ROOT/tab-latest-ran"
+PUT_RAN="$TMP_ROOT/put-ran"
 ENTER_MID_RAN="$TMP_ROOT/enter-mid-ran"
 ENTER_LATEST_RAN="$TMP_ROOT/enter-latest-ran"
 PROMPT_ALIGN_DIR="$TMP_ROOT/prompt-align"
@@ -105,6 +108,51 @@ EXPECT
 
 if [[ -e "$TAB_MID_RAN" || -e "$TAB_LATEST_RAN" ]]; then
   echo "error: Tab executed a history command; it must only cd and fill BUFFER" >&2
+  exit 1
+fi
+
+printf 'v1\t%s\t0\t%s\t%s\n' "$NOW" "$PUT_DIR" "touch $PUT_RAN" >"$HISTORY"
+
+SITUS_HISTORY="$HISTORY" \
+SITUS_BIN_DIR="$(dirname "$SITUS_BIN")" \
+SITUS_PICKER="${SITUS_PICKER:-inline}" \
+SITUS_PUT_START_DIR="$PUT_START_DIR" \
+expect <<'EXPECT'
+set timeout 8
+
+spawn env SITUS_HISTORY=$env(SITUS_HISTORY) SITUS_PICKER=$env(SITUS_PICKER) PATH=$env(SITUS_BIN_DIR):$env(PATH) SITUS_MODE=stay TERM=xterm-256color zsh -f
+expect -re {[%#] }
+send "PROMPT='MAGIC> '\r"
+expect "MAGIC> "
+send "cd $env(SITUS_PUT_START_DIR)\r"
+expect "MAGIC> "
+send "stty rows 16 cols 120\r"
+expect "MAGIC> "
+send "export SITUS_TTY=\$(tty)\r"
+expect "MAGIC> "
+send "eval \"\$(situs init zsh)\"\r"
+expect "MAGIC> "
+
+send "touch"
+send "\007"
+expect -re {1/1 result}
+send "\033y"
+expect -re {MAGIC> .*put-ran}
+send "\025"
+send "pwd\r"
+expect {
+  -re "$env(SITUS_PUT_START_DIR)" {}
+  timeout {
+    puts stderr "error: Alt-y changed directories; it must only fill BUFFER"
+    exit 1
+  }
+}
+send "exit\r"
+expect eof
+EXPECT
+
+if [[ -e "$PUT_RAN" ]]; then
+  echo "error: Alt-y executed the selected history command" >&2
   exit 1
 fi
 

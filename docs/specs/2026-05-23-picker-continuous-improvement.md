@@ -20,6 +20,8 @@ query, with newest matching history closest to the query line.
 - `Enter` runs the selected history command in the selected directory.
 - `Tab` changes the current zsh shell directory to the selected directory and
   leaves the highlighted command in the shell buffer without accepting it.
+- `Alt-Enter` and `Alt-Y` paste the selected command into the shell buffer
+  without changing directory, accepting the line, or running it.
 - `Esc` cancels without mutating the shell buffer or directory.
 - `Ctrl-F` toggles failed history. `Ctrl-O` toggles inspect.
 - `Ctrl-/` and `F1` toggle the help overlay. `situs keymap` prints the same

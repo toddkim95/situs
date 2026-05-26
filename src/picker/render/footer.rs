@@ -110,6 +110,12 @@ pub(super) fn help_overlay_lines(width: usize, i18n: I18n) -> Vec<String> {
             i18n.text(MessageKey::PickerHelpRunSelected)
         ),
         format!(
+            "  {} / {}   {}",
+            help_key_badge("alt-enter"),
+            help_key_badge("alt-y"),
+            i18n.text(MessageKey::PickerHelpPasteCommand)
+        ),
+        format!(
             "  {}   {}",
             help_key_badge("ctrl-y"),
             i18n.text(MessageKey::PickerHelpCopyCommand)

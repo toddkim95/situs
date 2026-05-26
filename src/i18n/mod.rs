@@ -158,6 +158,7 @@ message_keys! {
     KeymapHomeEnd,
     KeymapTab,
     KeymapEnter,
+    KeymapPut,
     KeymapEsc,
     KeymapHelp,
     KeymapFailed,
@@ -217,6 +218,7 @@ message_keys! {
     PickerHelpEditQuery,
     PickerHelpCdKeepQuery,
     PickerHelpRunSelected,
+    PickerHelpPasteCommand,
     PickerHelpCopyCommand,
     PickerHelpDeleteRow,
     PickerHelpCycleSource,
@@ -299,6 +301,7 @@ impl I18n {
   Home / End     {home_end}
   Tab            {tab}
   Enter          {enter}
+  Alt-Enter / Alt-Y {put}
   Esc / Ctrl-C   {esc}
 
 {views}
@@ -320,6 +323,7 @@ impl I18n {
             home_end = self.text(MessageKey::KeymapHomeEnd),
             tab = self.text(MessageKey::KeymapTab),
             enter = self.text(MessageKey::KeymapEnter),
+            put = self.text(MessageKey::KeymapPut),
             esc = self.text(MessageKey::KeymapEsc),
             views = self.text(MessageKey::KeymapViews),
             help = self.text(MessageKey::KeymapHelp),
