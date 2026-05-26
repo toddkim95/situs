@@ -15,26 +15,18 @@ pub(crate) fn config_path() -> PathBuf {
         return PathBuf::from(path);
     }
 
-    #[cfg(test)]
-    {
-        PathBuf::from("/nonexistent-situs-test-config-path-xyz")
+    if let Ok(path) = env::var("XDG_CONFIG_HOME") {
+        return PathBuf::from(path).join("situs-cli").join("config");
     }
 
-    #[cfg(not(test))]
-    {
-        if let Ok(path) = env::var("XDG_CONFIG_HOME") {
-            return PathBuf::from(path).join("situs-cli").join("config");
-        }
-
-        env::var("HOME")
-            .map(|home| {
-                PathBuf::from(home)
-                    .join(".config")
-                    .join("situs-cli")
-                    .join("config")
-            })
-            .unwrap_or_else(|_| PathBuf::from("situs-config"))
-    }
+    env::var("HOME")
+        .map(|home| {
+            PathBuf::from(home)
+                .join(".config")
+                .join("situs-cli")
+                .join("config")
+        })
+        .unwrap_or_else(|_| PathBuf::from("situs-config"))
 }
 
 pub(crate) fn read_configured_atuin_sync_mode() -> CliResult<Option<AtuinSyncMode>> {
@@ -71,6 +63,7 @@ pub(crate) fn resolve_picker_mode() -> CliResult<PickerMode> {
     )
 }
 
+#[cfg_attr(test, allow(dead_code))]
 pub(crate) fn read_configured_language() -> CliResult<Option<String>> {
     read_config_value(&config_path(), LANGUAGE_KEY)
 }

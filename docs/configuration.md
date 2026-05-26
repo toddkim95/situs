@@ -29,6 +29,7 @@ Example:
 ```text
 picker_mode=inline
 atuin_sync=auto
+language=en
 ```
 
 Supported keys:
@@ -37,6 +38,7 @@ Supported keys:
 | --- | --- | --- |
 | `picker_mode` | `inline`, `fullscreen` | `inline` |
 | `atuin_sync` | `off`, `auto`, `always` | `off` |
+| `language` | `en`, `ko`, `zh-Hans`, `es`, `ja` | system locale, then `en` |
 
 Environment variables win over config values.
 
@@ -51,13 +53,13 @@ Environment variables win over config values.
 | `SITUS_HISTORY` | path | history file override |
 | `SITUS_CONFIG` | path | config file override |
 | `SITUS_ATUIN_SYNC` | `off`, `auto`, `always` | Atuin sync override |
-| `SITUS_LANG` | `en`, `ko`, `zh-Hans` | UI language override |
+| `SITUS_LANG` | `en`, `ko`, `zh-Hans`, `es`, `ja` | UI language override |
 | `SITUS_PLAIN` | any value | force line-based picker |
 
-Language resolution checks `SITUS_LANG`, then `LC_ALL`, `LC_MESSAGES`, and
-`LANG`. English is the fallback. User-facing text can be localized, but commands,
-flags, config keys, environment variables, paths, history source IDs, and widget
-protocol actions stay machine-readable.
+Language resolution checks `SITUS_LANG`, then configured `language`, then
+`LC_ALL`, `LC_MESSAGES`, and `LANG`. English is the fallback. User-facing text
+can be localized, but commands, flags, config keys, environment variables,
+paths, history source IDs, and widget protocol actions stay machine-readable.
 
 ## Picker Mode
 
