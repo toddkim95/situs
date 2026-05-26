@@ -27,6 +27,7 @@ pub(super) fn ko(key: MessageKey) -> &'static str {
         MessageKey::SetupChoose => "선택 [1]: ",
         MessageKey::SetupPickerModeSetPrefix => "선택기 모드 설정",
         MessageKey::SetupAtuinFound => "Atuin 히스토리를 찾았습니다. Atuin 자동 동기화를 켤까요?",
+        MessageKey::SetupAtuinImportFound => "Atuin 히스토리를 Situs로 가져올까요?",
         MessageKey::SetupAtuinSetPrefix => "Atuin 자동 동기화 설정",
         MessageKey::SetupZshrcHint => "~/.zshrc에 아직 없다면 이 줄을 추가하세요:",
         MessageKey::DoctorTitle => "Situs 진단",

@@ -700,7 +700,7 @@ fn setup_cli_fallback() -> CliResult<i32> {
         .as_deref()
         .map(|path| path.exists())
         .unwrap_or(false)
-        && prompt_yes_no_cli(i18n.text(MessageKey::SetupAtuinFound), true)?
+        && prompt_yes_no_cli(i18n.text(MessageKey::SetupAtuinImportFound), true)?
     {
         // One-time import for CLI fallback
         if let Some(db_path) = crate::atuin::default_atuin_db_path() {

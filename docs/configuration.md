@@ -29,6 +29,8 @@ Example:
 ```text
 picker_mode=inline
 atuin_sync=auto
+bindkey=^G
+language=en
 ```
 
 Supported keys:
@@ -37,6 +39,8 @@ Supported keys:
 | --- | --- | --- |
 | `picker_mode` | `inline`, `fullscreen` | `inline` |
 | `atuin_sync` | `off`, `auto`, `always` | `off` |
+| `bindkey` | zsh/bash/fish key sequence or `None` | `^G` |
+| `language` | `en`, `ko`, `zh-Hans`, `es`, `ja` | system locale, then `en` |
 
 Environment variables win over config values.
 

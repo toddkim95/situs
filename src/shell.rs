@@ -6,7 +6,7 @@ pub(crate) fn print_zsh_init() {
     let mut init = ZSH_INIT.replace("SITUS_BINDKEY:=^G", &format!("SITUS_BINDKEY:={}", bindkey));
     if bindkey == "None" {
         init = init.replace(
-            "bindkey \"$SITUS_BINDKEY\" _situs_accept_from_history",
+            "bindkey \"$SITUS_BINDKEY\" situs-accept-from-history",
             "# bindkey disabled",
         );
     }

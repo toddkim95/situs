@@ -27,6 +27,7 @@ pub(super) fn en(key: MessageKey) -> &'static str {
         MessageKey::SetupChoose => "Choose [1]: ",
         MessageKey::SetupPickerModeSetPrefix => "Picker mode set to",
         MessageKey::SetupAtuinFound => "Atuin history was found. Enable Atuin auto-sync?",
+        MessageKey::SetupAtuinImportFound => "Import Atuin history into Situs now?",
         MessageKey::SetupAtuinSetPrefix => "Atuin auto-sync set to",
         MessageKey::SetupZshrcHint => "Add this to ~/.zshrc if it is not already there:",
         MessageKey::DoctorTitle => "Situs Doctor",

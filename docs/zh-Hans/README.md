@@ -128,6 +128,9 @@ situs keymap
 situs setup
 ```
 
+setup wizard 可设置 picker mode、widget shortcut、shell profile 安装、显示语言，
+并可执行一次性 Atuin history import。
+
 更多安装说明见 [docs/installation.md](../installation.md)。
 
 ## 日常使用

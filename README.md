@@ -128,6 +128,9 @@ For a guided setup flow:
 situs setup
 ```
 
+The setup wizard can choose picker mode, widget shortcut, shell profile
+installation, display language, and a one-time Atuin import.
+
 More install details are in [docs/installation.md](docs/installation.md).
 
 ## Everyday Usage

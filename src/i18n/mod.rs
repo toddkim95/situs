@@ -140,6 +140,7 @@ message_keys! {
     SetupChoose,
     SetupPickerModeSetPrefix,
     SetupAtuinFound,
+    SetupAtuinImportFound,
     SetupAtuinSetPrefix,
     SetupZshrcHint,
     DoctorTitle,

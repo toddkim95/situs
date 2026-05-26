@@ -31,6 +31,7 @@ pub(super) fn es(key: MessageKey) -> &'static str {
         MessageKey::SetupAtuinFound => {
             "Se encontró el historial de Atuin. ¿Activar la sincronización automática de Atuin?"
         }
+        MessageKey::SetupAtuinImportFound => "¿Importar ahora el historial de Atuin en Situs?",
         MessageKey::SetupAtuinSetPrefix => "Sincronización automática de Atuin establecida en",
         MessageKey::SetupZshrcHint => "Agrega esto a tu ~/.zshrc si aún no está allí:",
         MessageKey::DoctorTitle => "Diagnóstico de Situs",

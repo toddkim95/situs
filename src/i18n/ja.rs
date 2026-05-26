@@ -29,6 +29,7 @@ pub(super) fn ja(key: MessageKey) -> &'static str {
         MessageKey::SetupAtuinFound => {
             "Atuin の履歴が見つかりました。Atuin の自動同期を有効にしますか？"
         }
+        MessageKey::SetupAtuinImportFound => "Atuin の履歴を Situs に今すぐインポートしますか？",
         MessageKey::SetupAtuinSetPrefix => "Atuin 自動同期を設定しました:",
         MessageKey::SetupZshrcHint => {
             "まだ追加されていない場合は、~/.zshrc に以下を追加してください:"

@@ -124,6 +124,9 @@ Para un flujo de configuración guiado:
 situs setup
 ```
 
+El asistente puede configurar el modo del selector, el atajo del widget, la
+instalación en el perfil de shell, el idioma y una importación única de Atuin.
+
 Más detalles de instalación en [docs/installation.md](../installation.md).
 
 ## Uso diario
