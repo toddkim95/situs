@@ -95,15 +95,31 @@
 <rect x="565.25" y="254" width="17" height="20" fill="#282c34"/>
 <rect x="1122.9499999999998" y="254" width="9" height="20" fill="#282c34"/>
 <text xml:space="preserve" x="16" y="268" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">│                                                                ││                                                                │</text>
-<rect x="16" y="274" width="1116" height="20" fill="#282c34"/>
-<text xml:space="preserve" x="16" y="288" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">╰────────────────────────────────────────────────────────────────╯╰────────────────────────────────────────────────────────────────╯</text>
-<rect x="16" y="294" width="1116" height="20" fill="#282c34"/>
-<text xml:space="preserve" x="16" y="308" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">╭ Search ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮</text>
-<rect x="16" y="314" width="68" height="20" fill="#282c34"/>
-<rect x="1122.9499999999998" y="314" width="9" height="20" fill="#282c34"/>
-<text xml:space="preserve" x="16" y="328" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">│▶ cargo                                                                                                                           │</text>
-<rect x="16" y="334" width="1116" height="20" fill="#282c34"/>
-<text xml:space="preserve" x="16" y="348" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</text>
+<rect x="16" y="274" width="9" height="20" fill="#282c34"/>
+<rect x="565.25" y="274" width="212" height="20" fill="#282c34"/>
+<rect x="784.9499999999999" y="274" width="34" height="20" fill="#282c34"/>
+<rect x="1122.9499999999998" y="274" width="9" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="288" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">│                                                                ││  Ctrl-/ / F1    toggle help                                    │</text>
+<rect x="16" y="294" width="9" height="20" fill="#282c34"/>
+<rect x="565.25" y="294" width="195" height="20" fill="#282c34"/>
+<rect x="768.05" y="294" width="17" height="20" fill="#282c34"/>
+<rect x="793.4" y="294" width="34" height="20" fill="#282c34"/>
+<rect x="835.65" y="294" width="51" height="20" fill="#282c34"/>
+<rect x="894.8" y="294" width="60" height="20" fill="#282c34"/>
+<rect x="1122.9499999999998" y="294" width="9" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="308" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">│                                                                ││  Ctrl-F         show or hide failed history                    │</text>
+<rect x="16" y="314" width="1116" height="20" fill="#282c34"/>
+<text xml:space="preserve" x="16" y="328" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">╰────────────────────────────────────────────────────────────────╯╰────────────────────────────────────────────────────────────────╯</text>
+<rect x="16" y="334" width="51" height="20" fill="#282c34"/>
+<rect x="66.69999999999999" y="334" width="9" height="20" fill="#6366f1"/>
+<rect x="75.14999999999999" y="334" width="9" height="20" fill="#282c34"/>
+<rect x="83.6" y="334" width="9" height="20" fill="#6366f1"/>
+<rect x="92.05" y="334" width="43" height="20" fill="#282c34"/>
+<rect x="134.29999999999998" y="334" width="989" height="20" fill="#131720"/>
+<text xml:space="preserve" x="16" y="348" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">Search</text>
+<text xml:space="preserve" x="66.69999999999999" y="348" fill="#f8fafc" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">c</text>
+<text xml:space="preserve" x="75.14999999999999" y="348" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">&gt;</text>
+<text xml:space="preserve" x="92.05" y="348" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500">cargorgo                                                                                                                   </text>
 <rect x="16" y="354" width="1116" height="20" fill="#323232"/>
-<text xml:space="preserve" x="16" y="368" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> Enter cd &amp; run   Tab cd   Alt-Enter paste only   Ctrl-Y copy   Ctrl-D delete   F2 source   F3 context   Ctrl-/ help                </text>
+<text xml:space="preserve" x="16" y="368" fill="#e2e8f0" opacity="1" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" font-weight="500"> Enter cd &amp; run   Tab cd   Ctrl-Y copy   Ctrl-D delete   F2 source   F3 context   Ctrl-/ help                                       </text>
 </svg>

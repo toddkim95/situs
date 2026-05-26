@@ -7,6 +7,7 @@ use super::session::PickerSession;
 use crate::context::CommandContext;
 use crate::i18n::{I18n, MessageKey};
 use crate::model::Candidate;
+use crate::picker::width::visible_width;
 
 use ratatui::{
     backend::CrosstermBackend,
@@ -27,16 +28,16 @@ pub(super) fn render_ratatui_fullscreen(
     let backend = CrosstermBackend::new(&mut session.output);
     let mut terminal = Terminal::new(backend)?;
 
-    let _ = terminal.draw(|f| {
+    terminal.draw(|f| {
         let size = f.area();
 
-        // 1. Root Vertical Layout: Main Content, Search Input, Footer
+        // 1. Root Vertical Layout: Main Content, fixed query line, fixed footer.
         let chunks = Layout::default()
             .direction(Direction::Vertical)
             .constraints([
                 Constraint::Min(0),
-                Constraint::Length(3), // Search Input Box
-                Constraint::Length(1), // Shortcut Keys Footer
+                Constraint::Length(1),
+                Constraint::Length(1),
             ])
             .split(size);
 
@@ -289,110 +290,115 @@ pub(super) fn render_ratatui_fullscreen(
 
         f.render_widget(right_panel_widget, main_chunks[1]);
 
-        // Bottom Search Input
-        let search_title = if let Some(ref msg) = state.message {
-            format!(" Search | Message: {} ", msg)
-        } else {
-            " Search ".to_string()
-        };
-
-        let search_block = Paragraph::new(Line::from(vec![
-            Span::styled("▶ ", Style::default().fg(Color::Yellow)),
+        // Bottom query line
+        let mut search_spans = vec![
+            Span::styled("Search", Style::default().fg(Color::Cyan)),
+            Span::raw(" > "),
             Span::raw(&state.query),
-        ]))
-        .block(
-            Block::default()
-                .title(search_title)
-                .borders(Borders::ALL)
-                .border_type(BorderType::Rounded)
-                .border_style(Style::default().fg(Color::Cyan)),
-        );
+        ];
+        if let Some(ref msg) = state.message {
+            search_spans.push(Span::raw("   "));
+            search_spans.push(Span::styled(msg, Style::default().fg(Color::Yellow)));
+        }
+        let search_block = Paragraph::new(Line::from(search_spans));
 
         f.render_widget(search_block, chunks[1]);
 
         // Footer shortcut bar
-        let footer_spans = vec![
-            Span::styled(
-                " Enter",
+        let mut footer_spans = Vec::new();
+        for (key, action) in fullscreen_footer_items() {
+            footer_spans.push(Span::styled(
+                format!(" {key}"),
                 Style::default()
                     .bg(Color::Rgb(50, 50, 50))
                     .fg(Color::Yellow),
-            ),
-            Span::raw(" cd & run  "),
-            Span::styled(
-                " Tab",
-                Style::default()
-                    .bg(Color::Rgb(50, 50, 50))
-                    .fg(Color::Yellow),
-            ),
-            Span::raw(" cd  "),
-            Span::styled(
-                " Alt-Enter",
-                Style::default()
-                    .bg(Color::Rgb(50, 50, 50))
-                    .fg(Color::Yellow),
-            ),
-            Span::raw(" paste only  "),
-            Span::styled(
-                " Ctrl-Y",
-                Style::default()
-                    .bg(Color::Rgb(50, 50, 50))
-                    .fg(Color::Yellow),
-            ),
-            Span::raw(" copy  "),
-            Span::styled(
-                " Ctrl-D",
-                Style::default()
-                    .bg(Color::Rgb(50, 50, 50))
-                    .fg(Color::Yellow),
-            ),
-            Span::raw(" delete  "),
-            Span::styled(
-                " F2",
-                Style::default()
-                    .bg(Color::Rgb(50, 50, 50))
-                    .fg(Color::Yellow),
-            ),
-            Span::raw(" source  "),
-            Span::styled(
-                " F3",
-                Style::default()
-                    .bg(Color::Rgb(50, 50, 50))
-                    .fg(Color::Yellow),
-            ),
-            Span::raw(" context  "),
-            Span::styled(
-                " Ctrl-/",
-                Style::default()
-                    .bg(Color::Rgb(50, 50, 50))
-                    .fg(Color::Yellow),
-            ),
-            Span::raw(" help "),
-        ];
+            ));
+            footer_spans.push(Span::raw(format!(" {action}  ")));
+        }
 
         let footer =
             Paragraph::new(Line::from(footer_spans)).style(Style::default().fg(Color::DarkGray));
 
         f.render_widget(footer, chunks[2]);
-    });
+    })?;
 
-    // Set cursor position inside the Search Input Box
-    // Column should account for border (1) plus indicator "▶ " width (2) plus cursor offset.
     let size = terminal.size()?;
-    let rect = ratatui::layout::Rect::new(0, 0, size.width, size.height);
-    let chunks = Layout::default()
-        .direction(Direction::Vertical)
-        .constraints([
-            Constraint::Min(0),
-            Constraint::Length(3), // Search Input Box
-            Constraint::Length(1), // Shortcut Keys Footer
-        ])
-        .split(rect);
-
-    let cursor_col = chunks[1].x + 3 + state.query_cursor as u16;
-    let cursor_row = chunks[1].y + 1;
+    let (cursor_row, cursor_col) = fullscreen_query_cursor_position(
+        &state.query,
+        state.query_cursor,
+        usize::from(size.width),
+        usize::from(size.height),
+    );
     terminal.set_cursor_position((cursor_col, cursor_row))?;
     terminal.show_cursor()?;
 
     Ok(())
+}
+
+fn fullscreen_query_cursor_position(
+    query: &str,
+    cursor: usize,
+    width: usize,
+    height: usize,
+) -> (u16, u16) {
+    let bounded = cursor.min(query.len());
+    let cursor = if query.is_char_boundary(bounded) {
+        bounded
+    } else {
+        query
+            .char_indices()
+            .map(|(index, _)| index)
+            .take_while(|index| *index < bounded)
+            .last()
+            .unwrap_or(0)
+    };
+    let row = height.saturating_sub(2);
+    let column = visible_width("Search > ") + visible_width(&query[..cursor]);
+
+    (
+        row.min(usize::from(u16::MAX)) as u16,
+        column.min(width.saturating_sub(2)) as u16,
+    )
+}
+
+fn fullscreen_footer_items() -> &'static [(&'static str, &'static str)] {
+    &[
+        ("Enter", "cd & run"),
+        ("Tab", "cd"),
+        ("Ctrl-Y", "copy"),
+        ("Ctrl-D", "delete"),
+        ("F2", "source"),
+        ("F3", "context"),
+        ("Ctrl-/", "help"),
+    ]
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn query_cursor_position_stays_on_second_to_last_line() {
+        let (row, column) = fullscreen_query_cursor_position("cargo", "cargo".len(), 80, 24);
+
+        assert_eq!(row, 22);
+        assert_eq!(column, 14);
+    }
+
+    #[test]
+    fn query_cursor_position_counts_wide_characters() {
+        let (row, column) = fullscreen_query_cursor_position("한글", "한글".len(), 80, 10);
+
+        assert_eq!(row, 8);
+        assert_eq!(column, 13);
+    }
+
+    #[test]
+    fn footer_lists_only_supported_fullscreen_actions() {
+        let labels = fullscreen_footer_items();
+
+        assert!(labels.iter().any(|(key, _)| *key == "Enter"));
+        assert!(labels.iter().any(|(key, _)| *key == "Tab"));
+        assert!(!labels.iter().any(|(key, _)| key.contains("Alt")));
+    }
 }
