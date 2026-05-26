@@ -32,6 +32,7 @@ pub(super) fn es(key: MessageKey) -> &'static str {
         MessageKey::SetupAtuinFound => {
             "Se encontró el historial de Atuin. ¿Activar la sincronización automática de Atuin?"
         }
+        MessageKey::SetupAtuinImportFound => "¿Importar ahora el historial de Atuin en Situs?",
         MessageKey::SetupAtuinSetPrefix => "Sincronización automática de Atuin establecida en",
         MessageKey::SetupZshrcHint => "Agrega esto a tu ~/.zshrc si aún no está allí:",
         MessageKey::DoctorTitle => "Diagnóstico de Situs",
@@ -122,6 +123,9 @@ pub(super) fn es(key: MessageKey) -> &'static str {
         MessageKey::SetupTuiSaveBtn => "[ Guardar Configuración ]",
         MessageKey::SetupTuiCancelBtn => "[ Cancelar ]",
         MessageKey::SetupTuiSavedMessage => "¡Configuración guardada correctamente!",
+        MessageKey::SetupTuiWidgetKey => "Tecla de atajo del widget",
+        MessageKey::SetupTuiShellInit => "Agregar automáticamente al perfil",
+        MessageKey::SetupTuiAtuinImport => "Importación única de Atuin",
     }
 }
 

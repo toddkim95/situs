@@ -30,6 +30,7 @@ pub(super) fn ja(key: MessageKey) -> &'static str {
         MessageKey::SetupAtuinFound => {
             "Atuin の履歴が見つかりました。Atuin の自動同期を有効にしますか？"
         }
+        MessageKey::SetupAtuinImportFound => "Atuin の履歴を Situs に今すぐインポートしますか？",
         MessageKey::SetupAtuinSetPrefix => "Atuin 自動同期を設定しました:",
         MessageKey::SetupZshrcHint => {
             "まだ追加されていない場合は、~/.zshrc に以下を追加してください:"
@@ -120,6 +121,9 @@ pub(super) fn ja(key: MessageKey) -> &'static str {
         MessageKey::SetupTuiSaveBtn => "[ 設定を保存 ]",
         MessageKey::SetupTuiCancelBtn => "[ キャンセル ]",
         MessageKey::SetupTuiSavedMessage => "設定が正常に保存されました！",
+        MessageKey::SetupTuiWidgetKey => "ウィジェットショートカットキー",
+        MessageKey::SetupTuiShellInit => "シェルプロファイルへの自動追加",
+        MessageKey::SetupTuiAtuinImport => "Atuin履歴の1回限りのインポート",
     }
 }
 

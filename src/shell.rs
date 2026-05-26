@@ -1,13 +1,56 @@
 pub(crate) fn print_zsh_init() {
-    print!("{ZSH_INIT}");
+    let bindkey = crate::config::read_configured_bindkey()
+        .ok()
+        .flatten()
+        .unwrap_or_else(|| "^G".to_string());
+    let mut init = ZSH_INIT.replace("SITUS_BINDKEY:=^G", &format!("SITUS_BINDKEY:={}", bindkey));
+    if bindkey == "None" {
+        init = init.replace(
+            "bindkey \"$SITUS_BINDKEY\" situs-accept-from-history",
+            "# bindkey disabled",
+        );
+    }
+    print!("{init}");
 }
 
 pub(crate) fn print_bash_init() {
-    print!("{BASH_INIT}");
+    let bindkey = crate::config::read_configured_bindkey()
+        .ok()
+        .flatten()
+        .unwrap_or_else(|| "^G".to_string());
+    let mut init = BASH_INIT.replace("SITUS_BINDKEY:=^G", &format!("SITUS_BINDKEY:={}", bindkey));
+    if bindkey == "None" {
+        init = init.replace(
+            "bind -x \"\\\"$SITUS_BINDKEY\\\": _situs_bash_widget\"",
+            "# bind disabled",
+        );
+    }
+    print!("{init}");
 }
 
 pub(crate) fn print_fish_init() {
-    print!("{FISH_INIT}");
+    let bindkey = crate::config::read_configured_bindkey()
+        .ok()
+        .flatten()
+        .unwrap_or_else(|| "^G".to_string());
+    let init = if bindkey == "None" {
+        let init_temp = FISH_INIT.replace(
+            "bind $SITUS_BINDKEY __situs_choose_widget",
+            "# bind disabled",
+        );
+        init_temp.replace("SITUS_BINDKEY \\cg", "SITUS_BINDKEY None")
+    } else {
+        let fish_key = if bindkey.starts_with('^') && bindkey.len() == 2 {
+            format!(
+                "\\c{}",
+                bindkey.chars().nth(1).unwrap().to_ascii_lowercase()
+            )
+        } else {
+            bindkey.clone()
+        };
+        FISH_INIT.replace("SITUS_BINDKEY \\cg", &format!("SITUS_BINDKEY {}", fish_key))
+    };
+    print!("{init}");
 }
 
 const BASH_INIT: &str = r#"# situs-cli bash integration

@@ -58,7 +58,8 @@ situs setup
 ```
 
 The setup flow can write Situs's config file and help choose picker mode and
-Atuin auto-sync behavior.
+display language, choose the widget shortcut, optionally append shell init to
+your detected shell profile, and run a one-time Atuin history import.
 
 ## Key Binding
 

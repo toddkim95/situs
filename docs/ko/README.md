@@ -130,6 +130,9 @@ guided setup flow:
 situs setup
 ```
 
+setup wizard는 picker mode, widget shortcut, shell profile 설치, 표시 언어,
+Atuin history 1회 import를 설정할 수 있습니다.
+
 자세한 설치 내용은 [docs/installation.md](../installation.md)에 있습니다.
 
 ## 일상 사용

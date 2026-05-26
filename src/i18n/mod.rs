@@ -134,6 +134,7 @@ fn normalize_locale(value: &str) -> String {
 macro_rules! message_keys {
     ($($key:ident),+ $(,)?) => {
         #[derive(Debug, Clone, Copy)]
+        #[allow(dead_code)]
         pub(crate) enum MessageKey {
             $($key),+
         }
@@ -174,6 +175,7 @@ message_keys! {
     SetupChoose,
     SetupPickerModeSetPrefix,
     SetupAtuinFound,
+    SetupAtuinImportFound,
     SetupAtuinSetPrefix,
     SetupZshrcHint,
     DoctorTitle,
@@ -258,6 +260,9 @@ message_keys! {
     SetupTuiSaveBtn,
     SetupTuiCancelBtn,
     SetupTuiSavedMessage,
+    SetupTuiWidgetKey,
+    SetupTuiShellInit,
+    SetupTuiAtuinImport,
 }
 
 #[derive(Debug, Clone, Copy)]

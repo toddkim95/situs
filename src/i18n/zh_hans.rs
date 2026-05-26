@@ -28,6 +28,7 @@ pub(super) fn zh_hans(key: MessageKey) -> &'static str {
         MessageKey::SetupChoose => "选择 [1]: ",
         MessageKey::SetupPickerModeSetPrefix => "选择器模式已设置为",
         MessageKey::SetupAtuinFound => "发现 Atuin 历史。启用 Atuin 自动同步吗?",
+        MessageKey::SetupAtuinImportFound => "现在将 Atuin 历史导入 Situs 吗?",
         MessageKey::SetupAtuinSetPrefix => "Atuin 自动同步已设置为",
         MessageKey::SetupZshrcHint => "如果 ~/.zshrc 里还没有, 请添加:",
         MessageKey::DoctorTitle => "Situs 诊断",
@@ -112,6 +113,9 @@ pub(super) fn zh_hans(key: MessageKey) -> &'static str {
         MessageKey::SetupTuiSaveBtn => "[ 保存设置 ]",
         MessageKey::SetupTuiCancelBtn => "[ 取消 ]",
         MessageKey::SetupTuiSavedMessage => "设置保存成功！",
+        MessageKey::SetupTuiWidgetKey => "快捷键绑定",
+        MessageKey::SetupTuiShellInit => "自动添加到 Shell 配置",
+        MessageKey::SetupTuiAtuinImport => "单次导入 Atuin 历史",
     }
 }
 

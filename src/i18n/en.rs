@@ -28,6 +28,7 @@ pub(super) fn en(key: MessageKey) -> &'static str {
         MessageKey::SetupChoose => "Choose [1]: ",
         MessageKey::SetupPickerModeSetPrefix => "Picker mode set to",
         MessageKey::SetupAtuinFound => "Atuin history was found. Enable Atuin auto-sync?",
+        MessageKey::SetupAtuinImportFound => "Import Atuin history into Situs now?",
         MessageKey::SetupAtuinSetPrefix => "Atuin auto-sync set to",
         MessageKey::SetupZshrcHint => "Add this to ~/.zshrc if it is not already there:",
         MessageKey::DoctorTitle => "Situs Doctor",
@@ -116,6 +117,9 @@ pub(super) fn en(key: MessageKey) -> &'static str {
         MessageKey::SetupTuiSaveBtn => "[ Save Settings ]",
         MessageKey::SetupTuiCancelBtn => "[ Cancel ]",
         MessageKey::SetupTuiSavedMessage => "Settings successfully saved!",
+        MessageKey::SetupTuiWidgetKey => "Widget Shortcut Key",
+        MessageKey::SetupTuiShellInit => "Auto-add to Shell Profile",
+        MessageKey::SetupTuiAtuinImport => "One-time Atuin Import",
     }
 }
 

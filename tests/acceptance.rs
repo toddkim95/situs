@@ -177,6 +177,19 @@ fn init_zsh_prints_widget_and_default_binding() {
 }
 
 #[test]
+fn init_zsh_respects_disabled_configured_bindkey() {
+    let home = TestHome::new("init-zsh-disabled-bindkey");
+    fs::write(&home.config, "bindkey=None\n").unwrap();
+
+    let output = run(home.command().args(["init", "zsh"]));
+
+    assert!(output.status.success(), "stderr: {}", stderr(&output));
+    let stdout = stdout(&output);
+    assert!(stdout.contains("# bindkey disabled"));
+    assert!(!stdout.contains("bindkey \"$SITUS_BINDKEY\" situs-accept-from-history"));
+}
+
+#[test]
 fn init_bash_prints_widget_and_binding() {
     let home = TestHome::new("init-bash");
 
@@ -455,7 +468,8 @@ fn setup_writes_inline_picker_mode_by_default() {
     assert!(output.status.success(), "stderr: {}", stderr(&output));
     let config = fs::read_to_string(&home.config).unwrap();
     assert!(config.contains("picker_mode=inline\n"));
-    assert!(!config.contains("atuin_sync=auto\n"));
+    assert!(config.contains("bindkey=^G\n"));
+    assert!(config.contains("atuin_sync=off\n"));
 }
 
 #[test]
@@ -467,7 +481,35 @@ fn setup_writes_fullscreen_picker_mode_without_atuin_prompt_when_atuin_is_absent
     assert!(output.status.success(), "stderr: {}", stderr(&output));
     let config = fs::read_to_string(&home.config).unwrap();
     assert!(config.contains("picker_mode=fullscreen\n"));
-    assert!(!config.contains("atuin_sync=auto\n"));
+    assert!(config.contains("bindkey=^G\n"));
+    assert!(config.contains("atuin_sync=off\n"));
+}
+
+#[test]
+fn setup_cli_fallback_prompts_for_one_time_atuin_import() {
+    let home = TestHome::new("setup-atuin-import-prompt");
+    let db_dir = home.xdg_data.join("atuin");
+    fs::create_dir_all(&db_dir).unwrap();
+    let db = db_dir.join("history.db");
+    let connection = Connection::open(&db).unwrap();
+    connection
+        .execute_batch(
+            "CREATE TABLE history (
+                timestamp INTEGER,
+                exit INTEGER,
+                cwd TEXT,
+                command TEXT,
+                deleted_at INTEGER
+            );",
+        )
+        .unwrap();
+
+    let output = run_with_stdin(home.command().arg("setup"), "\nn\n");
+
+    assert!(output.status.success(), "stderr: {}", stderr(&output));
+    let stdout = stdout(&output);
+    assert!(stdout.contains("Import Atuin history into Situs now?"));
+    assert!(!stdout.contains("Enable Atuin auto-sync?"));
 }
 
 #[test]
