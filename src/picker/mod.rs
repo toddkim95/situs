@@ -1,4 +1,5 @@
 mod clipboard;
+mod fullscreen;
 mod input;
 mod keymap;
 mod keys;

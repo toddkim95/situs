@@ -123,23 +123,33 @@ pub(super) fn prompt_for_candidate_inline(
             total_words: command_word_count(&state.scope_anchor).max(1),
         };
 
-        session.render(
-            &picker_lines(
-                command,
+        if session.mode == crate::model::PickerMode::Fullscreen {
+            super::fullscreen::render_ratatui_fullscreen(
+                session,
                 &candidates,
                 &visible,
-                scope,
                 &state,
-                session.max_rows,
-                session.width,
-            ),
-            Some(query_cursor_position(
-                &state.query,
-                state.query_cursor,
-                session.max_rows,
-                session.width,
-            )),
-        )?;
+                &command_context,
+            )?;
+        } else {
+            session.render(
+                &picker_lines(
+                    command,
+                    &candidates,
+                    &visible,
+                    scope,
+                    &state,
+                    session.max_rows,
+                    session.width,
+                ),
+                Some(query_cursor_position(
+                    &state.query,
+                    state.query_cursor,
+                    session.max_rows,
+                    session.width,
+                )),
+            )?;
+        }
 
         let key = session.read_key()?;
         match handle_picker_key(key, &mut state, visible.len()) {

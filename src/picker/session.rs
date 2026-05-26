@@ -20,11 +20,11 @@ use super::viewport::{
 
 pub(super) struct PickerSession {
     _raw_mode: RawMode,
-    output: File,
+    pub(super) output: File,
     pub(super) width: usize,
     pub(super) max_rows: usize,
     cursor_row: Option<usize>,
-    mode: PickerMode,
+    pub(super) mode: PickerMode,
 }
 
 impl PickerSession {

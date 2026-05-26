@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+export SITUS_LANG=en
+
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SITUS_BIN="${SITUS_BIN:-"$ROOT/target/debug/situs"}"
 SITUS_PICKER="${SITUS_PICKER:-inline}"
